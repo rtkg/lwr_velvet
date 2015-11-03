@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<robot name="apple" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Import Rviz colors -->
+  <xacro:include filename="$(find apple_description)/urdf/materials.xacro" />
+  <!--Include the KUKA LBR iiwa-->
+  <xacro:include filename="$(find lbr_iiwa_description)/urdf/lbr_iiwa.xacro"/> 
+  <!--Include the Velvet Fingers gripper-->
+  <xacro:include filename="$(find velvet_fingers_description)/urdf/velvet_fingers.xacro"/>
+   <!--Include the CitiTruck-->
+  <xacro:include filename="$(find apple_description)/urdf/citi_truck.xacro"/>
+   <!--Include the half pallet-->
+  <xacro:include filename="$(find apple_description)/urdf/half_pallet.xacro"/>
+ <!-- Gazebo plugins -->
+  <xacro:include filename="$(find apple_description)/gazebo/gazebo.urdf.xacro"/>
+
+  <!-- Fix to world just for testing -->
+  <link name="world"/>
+
+  <!-- citi truck-->
+  <xacro:citi_truck name="citi_truck" parent="world">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:citi_truck> 
+
+  <!-- half pallet on the citi truck-->
+  <xacro:half_pallet name="transport_pallet" parent="citi_truck_base">
+    <origin xyz="0.6 0 0.02" rpy="0 0 0" />
+  </xacro:half_pallet> 
+
+  <!-- half pallet for loading -->
+  <xacro:half_pallet name="load_pallet" parent="citi_truck_base">
+    <origin xyz="1.1 -0.9 0.02" rpy="0 0 0" />
+  </xacro:half_pallet> 
+
+  <!--lbr -->
+  <xacro:lbr_iiwa name="lbr_iiwa" hardware_interface="$(arg prefix)" parent="citi_truck_base">
+    <origin xyz="0.114 -0.265 0.595" rpy="0 ${PI / 2} ${-PI / 4}" />
+  </xacro:lbr_iiwa>
+
+  <!--velvet fingers gripper -->
+  <xacro:velvet_fingers name="velvet_fingers" hardware_interface="$(arg prefix)" parent="lbr_iiwa_link_7">
+    <origin xyz="0 0 0.065" rpy="0 ${-PI / 2} 0" />
+  </xacro:velvet_fingers>
+
+</robot>
+
+
