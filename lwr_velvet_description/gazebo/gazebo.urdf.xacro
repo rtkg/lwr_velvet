@@ -3,7 +3,7 @@
 
   <gazebo>
     <plugin name="gazebo_ros_controller" filename="libgazebo_ros_control.so">
-      <robotNamespace>/apple</robotNamespace>
+      <robotNamespace>/lwr_velvet</robotNamespace>
     </plugin>
   </gazebo>
 
