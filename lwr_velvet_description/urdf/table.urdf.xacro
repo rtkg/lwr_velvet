@@ -32,7 +32,7 @@
 			<geometry>
 				<box size="${leg_width/2} -${leg_width} ${height - plate_thickness}"/>
 			</geometry>
-			<material name="Vito/Black"/>
+			<material name="LWR_VELVET/Grey"/>
 		</visual>
 		<collision>
 			<geometry>
@@ -61,7 +61,7 @@
             <geometry>
                 <box size="${length} ${width} ${plate_thickness}"/>
 			</geometry>
-			<material name="Vito/LightGrey"/>
+			<material name="LWR_VELVET/White"/>
 		</visual>
         <collision>
             <origin xyz="${1/2 * length} ${-1/2 * width} ${-1/2 * plate_thickness}"/>

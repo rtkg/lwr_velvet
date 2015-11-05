@@ -1,0 +1,105 @@
+#lwr:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+  
+  # Effort Position Controllers ---------------------------------------
+  lwr_joint_1_effort_pos_controller:
+    type: effort_controllers/JointPositionController
+    joint: lwr_joint_1
+    pid: {p: 800.0, i: 100, d: 80.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+  lwr_joint_2_effort_pos_controller:
+    type: effort_controllers/JointPositionController
+    joint: lwr_joint_2
+    pid: {p: 800.0, i: 1000, d: 100.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+  lwr_joint_3_effort_pos_controller:
+    type: effort_controllers/JointPositionController
+    joint: lwr_joint_3
+    pid: {p: 800.0, i: 10, d: 5.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+  lwr_joint_4_effort_pos_controller:
+    type: effort_controllers/JointPositionController
+    joint: lwr_joint_4
+    pid: {p: 800.0, i: 10, d: 80.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+  lwr_joint_5_effort_pos_controller:
+    type: effort_controllers/JointPositionController
+    joint: lwr_joint_5
+    pid: {p: 300.0, i: 5, d: 10.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+  lwr_joint_6_effort_pos_controller:
+    type: effort_controllers/JointPositionController
+    joint: lwr_joint_6
+    pid: {p: 50.0, i: 1, d: 1.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+  lwr_joint_7_effort_pos_controller:
+    type: effort_controllers/JointPositionController
+    joint: lwr_joint_7
+    pid: {p: 10.0, i: 0.1, d: 1.0, i_clamp_min: -10000, i_clamp_max: 10000}
+
+  # Forward Position Controllers ---------------------------------------
+  lwr_joint_1_forward_pos_controller:
+    type: position_controllers/JointPositionController
+    joint: lwr_joint_1
+
+  lwr_joint_2_forward_pos_controller:
+    type: position_controllers/JointPositionController
+    joint: lwr_joint_2
+
+  lwr_joint_3_forward_pos_controller:
+    type: position_controllers/JointPositionController
+    joint: lwr_joint_3
+
+  lwr_joint_4_forward_pos_controller:
+    type: position_controllers/JointPositionController
+    joint: lwr_joint_4
+
+  lwr_joint_5_forward_pos_controller:
+    type: position_controllers/JointPositionController
+    joint: lwr_joint_5
+
+  lwr_joint_6_forward_pos_controller:
+    type: position_controllers/JointPositionController
+    joint: lwr_joint_6
+
+  lwr_joint_7_forward_pos_controller:
+    type: position_controllers/JointPositionController
+    joint: lwr_joint_7
+
+  # Forward Velocity Controllers ---------------------------------------
+  lwr_joint_1_forward_vel_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: lwr_joint_1
+
+  lwr_joint_2_forward_vel_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: lwr_joint_2
+
+  lwr_joint_3_forward_vel_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: lwr_joint_3
+
+  lwr_joint_4_forward_vel_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: lwr_joint_4
+
+  lwr_joint_5_forward_vel_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: lwr_joint_5
+
+  lwr_joint_6_forward_vel_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: lwr_joint_6
+
+  lwr_joint_7_forward_vel_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: lwr_joint_7
+
+
+
+
+
+

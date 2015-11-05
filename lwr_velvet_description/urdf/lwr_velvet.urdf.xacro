@@ -7,9 +7,10 @@
   <!-- MODELS -->
   <xacro:include filename="$(find lwr_velvet_description)/urdf/torso.urdf.xacro"/>
   <xacro:include filename="$(find lwr_velvet_description)/urdf/table.urdf.xacro"/>
-  <xacro:include filename="$(find lwr_velvet_description)/urdf/materials.urdf"/>
-  <xacro:include filename="$(find lwr_description)/model/kuka_lwr.urdf.xacro"/>
-    
+  <xacro:include filename="$(find lwr_velvet_description)/urdf/materials.xacro"/>
+  <xacro:include filename="$(find lwr_description)/urdf/lwr.xacro"/>
+  <xacro:include filename="$(find velvet_fingers_description)/urdf/velvet_fingers.xacro"/>
+
   <link name="world" />
   
   <!-- BODY -->
@@ -37,10 +38,10 @@
     <origin xyz="0 0 0"/>
   </xacro:model_torso>
   
-  <!-- LEFT ARM -->
-  <xacro:kuka_lwr name="left_arm" parent="world">
+  <!-- LEFT ARM 
+  <xacro:lwr name="left_arm" hardware_interface="$(arg prefix)" parent="world">
     <origin xyz="-0.165 -0.1085854 0.390" rpy="1.5707963267948966 0.5235987010713441 -0.5235990737060282"/>
-  </xacro:kuka_lwr>
+  </xacro:lwr-->
 
   <!-- LEFT SOFTHAND 
   <xacro:soft_hand parent="left_arm_7_link" name="left_hand" left="true" withAdaptiveTransmission="true" useMimicTag="$(arg use_mimic_tag)">
@@ -48,14 +49,19 @@
   </xacro:soft_hand-->
 
   <!-- RIGHT ARM -->
-  <xacro:kuka_lwr name="right_arm" parent="world">
+  <xacro:lwr name="right_arm" hardware_interface="$(arg prefix)" parent="world">
     <origin xyz="-0.165 0.10858 0.390" rpy="-1.5707963267948966 0.5235987010713441 0.5235990737060282"/>
-  </xacro:kuka_lwr>
+  </xacro:lwr>
 
   <!-- RIGHT SOFTHAND
   <xacro:soft_hand parent="right_arm_7_link" name="right_hand" left="false" withAdaptiveTransmission="true" useMimicTag="$(arg use_mimic_tag)">
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </xacro:soft_hand-->
+
+  <!--velvet fingers gripper-->
+  <xacro:velvet_fingers name="velvet_fingers" hardware_interface="$(arg prefix)" parent="right_arm_link_7">
+    <origin xyz="0 0 0.065" rpy="0 ${-PI / 2} 0" />
+  </xacro:velvet_fingers>
 
 
 </robot>

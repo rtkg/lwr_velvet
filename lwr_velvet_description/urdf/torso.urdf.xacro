@@ -27,13 +27,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://vito_description/meshes/torso.stl"/>
+        <mesh filename="package://lwr_velvet_description/meshes/torso.stl"/>
       </geometry>
-      <material name="Vito/Silver"/>
+      <material name="LWR_VELVET/Aluminium"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://vito_description/meshes/torso.stl"/>
+        <mesh filename="package://lwr_velvet_description/meshes/torso.stl"/>
       </geometry>
     </collision>
   </link>
