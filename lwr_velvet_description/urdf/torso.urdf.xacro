@@ -39,7 +39,8 @@
   </link>
 
   <gazebo reference="${name}_link">
-    <!-- <static>true</static> -->
+   <static>true</static> 
+ <turnGravityOff>true</turnGravityOff>
   </gazebo>
 
 </xacro:macro>

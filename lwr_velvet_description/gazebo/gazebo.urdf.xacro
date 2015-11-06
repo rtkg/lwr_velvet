@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="apple" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="lwr_velvet" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <gazebo>
     <plugin name="gazebo_ros_controller" filename="libgazebo_ros_control.so">

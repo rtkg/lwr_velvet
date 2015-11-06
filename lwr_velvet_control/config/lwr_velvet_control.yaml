@@ -1,0 +1,37 @@
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+  
+  # Group Velocity Controllers ---------------------------------------
+  lwr_velvet_group_forward_vel_controller:
+    type: velocity_controllers/JointGroupVelocityController
+#    type: velocity_controllers/JointVelocityController
+    joints:
+      - lwr_joint_1
+      - lwr_joint_2
+      - lwr_joint_3
+      - lwr_joint_4
+      - lwr_joint_5
+      - lwr_joint_6
+      - lwr_joint_7
+      - velvet_fingers_joint_1
+
+  # HQP Velocity Controller ----------------------------------------
+  lwr_velvet_hqp_vel_controller:
+    type: hqp_controllers/HQPVelocityController
+    joints:
+      - lwr_joint_1
+      - lwr_joint_2
+      - lwr_joint_3
+      - lwr_joint_4
+      - lwr_joint_5
+      - lwr_joint_6
+      - lwr_joint_7
+#      - velvet_fingers_joint_1
+
+
+
+
+
+

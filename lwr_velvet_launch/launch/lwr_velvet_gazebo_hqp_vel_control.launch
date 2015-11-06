@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!--Convenience launch file to start gazebo + control--> 
+
+  <!--The hardware_interface parameter determines which hardware inteface is used-->
+  <include file="$(find lwr_velvet_gazebo)/launch/lwr_velvet_world.launch">
+    <arg name="hardware_interface" value="VelocityJointInterface" />
+  </include>
+
+  <include file="$(find lwr_velvet_control)/launch/lwr_velvet_control.launch">
+    <arg name="hardware_interface" value="VelocityJointInterface" />
+    <arg name="controllers" value="joint_state_controller
+                                  lwr_velvet_hqp_vel_controller" /> 
+
+  </include>
+
+
+  <!-- Show in Rviz 
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find lwr_velvet_description)/launch/lwr_velvet.rviz"/-->
+
+
+ <!--load predifined persistent task descriptions (joint limit avoidance, self-collision avoidance ...) definitions for the HQP controller 
+ <rosparam file="$(find demo_palletizing)/hqp_tasks/task_definitions.yaml" command="load" ns="/lwr_velvet"/-->
+
+  <!-- Launch RQT for control tuning 
+ <node name="lwr_rqt" pkg="rqt_gui" type="rqt_gui" respawn="false"
+	output="screen" args="-perspective-file $(find lwr_velvet_control)/launch/lwr_velvet_hqp_vel_control.perspective"/-->
+
+</launch>
+
+

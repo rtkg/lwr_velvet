@@ -10,6 +10,7 @@
   <xacro:include filename="$(find lwr_velvet_description)/urdf/materials.xacro"/>
   <xacro:include filename="$(find lwr_description)/urdf/lwr.xacro"/>
   <xacro:include filename="$(find velvet_fingers_description)/urdf/velvet_fingers.xacro"/>
+  <xacro:include filename="$(find lwr_velvet_description)/gazebo/gazebo.urdf.xacro"/>
 
   <link name="world" />
   
@@ -20,7 +21,7 @@
                     width="1.05"
                     height="0.910"
                     plate_thickness="0.05">
-    <origin xyz="-0.495 0.55 0" rpy="0 0 0"/>
+    <origin xyz="-0.495 0.55 0.91" rpy="0 0 0"/>
   </xacro:model_table>
 
   <!-- WORKBENCH -->
@@ -30,12 +31,12 @@
                     width="1.05"
                     height="0.960"
                     plate_thickness="0.1">
-  <origin xyz="-1.25 0.55 0.07" rpy="0 0 0"/>
+  <origin xyz="-1.25 0.55 0.98" rpy="0 0 0"/>
   </xacro:model_table>
 
   <!-- TORSO -->
   <xacro:model_torso name="torso" parent="world">
-    <origin xyz="0 0 0"/>
+    <origin xyz="0 0 0.91"/>
   </xacro:model_torso>
   
   <!-- LEFT ARM 
@@ -49,8 +50,8 @@
   </xacro:soft_hand-->
 
   <!-- RIGHT ARM -->
-  <xacro:lwr name="right_arm" hardware_interface="$(arg prefix)" parent="world">
-    <origin xyz="-0.165 0.10858 0.390" rpy="-1.5707963267948966 0.5235987010713441 0.5235990737060282"/>
+  <xacro:lwr name="lwr" hardware_interface="$(arg prefix)" parent="world">
+    <origin xyz="-0.165 0.10858 1.3" rpy="-1.5707963267948966 0.5235987010713441 0.5235990737060282"/>
   </xacro:lwr>
 
   <!-- RIGHT SOFTHAND
@@ -59,7 +60,7 @@
   </xacro:soft_hand-->
 
   <!--velvet fingers gripper-->
-  <xacro:velvet_fingers name="velvet_fingers" hardware_interface="$(arg prefix)" parent="right_arm_link_7">
+  <xacro:velvet_fingers name="velvet_fingers" hardware_interface="$(arg prefix)" parent="lwr_link_7">
     <origin xyz="0 0 0.065" rpy="0 ${-PI / 2} 0" />
   </xacro:velvet_fingers>
 

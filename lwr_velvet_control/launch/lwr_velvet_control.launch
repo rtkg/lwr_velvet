@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- these arguments you can pass this launch file-->
+  <arg name="hardware_interface" default="EffortJointInterface"/>
+  <arg name="controllers" default="joint_state_controller 
+                                   lwr_joint_1_effort_pos_controller
+				   lwr_joint_2_effort_pos_controller
+				   lwr_joint_3_effort_pos_controller
+				   lwr_joint_4_effort_pos_controller
+				   lwr_joint_5_effort_pos_controller
+				   lwr_joint_6_effort_pos_controller
+				   lwr_joint_7_effort_pos_controller"/>
+
+ <!-- Load the URDF with the given hardware interface into the ROS Parameter Server -->
+  <param name="robot_description"
+	 command="$(find xacro)/xacro.py '$(find lwr_velvet_description)/urdf/lwr_velvet.urdf.xacro' prefix:=$(arg hardware_interface)" />
+
+  <!-- Load the collision objects -->
+  <!--rosparam file="$(find lwr_velvet_description)/collision/collision.yaml" command="load"/-->
+
+  <!--param name="/lwr_velvet/lwr_velvet_hqp_vel_controller/robot_description"
+	 command="$(find xacro)/xacro.py '$(find lwr_velvet_description)/urdf/lwr_velvet.urdf.xacro' prefix:=$(arg hardware_interface)" /-->
+
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find lwr_control)/config/lwr_control.yaml" command="load" ns="/lwr_velvet"  />
+  <rosparam file="$(find velvet_fingers_control)/config/velvet_fingers_control.yaml" command="load" ns="/lwr_velvet"  />
+  <rosparam file="$(find lwr_velvet_control)/config/lwr_velvet_control.yaml" command="load" ns="/lwr_velvet"  />
+
+  <!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+	output="screen" ns="/lwr_velvet" args="$(arg controllers)" />
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+	respawn="false" output="screen">
+    <remap from="/joint_states" to="/lwr_velvet/joint_states" />
+  </node>
+
+</launch>
