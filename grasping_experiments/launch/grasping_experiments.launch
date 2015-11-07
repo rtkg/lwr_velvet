@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<launch>
+  <include file="$(find lwr_velvet_launch)/launch/lwr_vel_control.launch"/>
+  <!--include file="$(find lbr_fri)/launch/fri_launch.launch"/>
+  <include file="$(find can_finder)/launch/can_finder.launch"/>
+  <include file="$(find velvet_interface_node)/launch/velvet_node.launch"/-->
+  <!--include file="$(find experiment_console)/launch/structure_frames.launch"/-->
+  <!-- launch the demo palletizing node -->
+  <!--node name="longLiveCamera" pkg="experiment_console" type="startCamera.sh" respawn="false" output="screen"/-->
+  <node name="grasping_experiments" pkg="grasping_experiments" type="grasping_experiments" respawn="false" output="screen">
+     <param name="with_gazebo" type="bool" value="false"/>
+     <remap from="/task_status_array" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/task_status_array"/>
+     <remap from="/set_tasks" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/set_tasks"/>
+     <remap from="/remove_tasks" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/remove_tasks"/>
+     <remap from="/load_tasks" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/load_tasks"/>
+     <remap from="/reset_hqp_control" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/reset_hqp_control"/>
+     <remap from="/activate_hqp_control" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/activate_hqp_control"/>
+     <remap from="/visualize_task_geometries" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/visualize_task_geometries"/>
+     <remap from="/set_physics_properties" to="/gazebo/set_physics_properties"/>
+     <remap from="/get_grasp_interval" to="/find_beer/find_cans"/>
+     <remap from="/velvet_grasp" to="/velvet_node/velvet_grasp"/>
+     <remap from="/velvet_pos" to="/velvet_node/gripper_pos"/>
+     <remap from="/set_stiffness" to="/lwr_velvet/iiwa_hw_interface/set_stiffness"/>
+  </node>
+
+ <!--load predifined persistent task descriptions (joint limit avoidance, self-collision avoidance ...) definitions for the HQP controller -->
+ <rosparam file="$(find grasping_experiments)/hqp_tasks/task_definitions.yaml" command="load" ns="/lwr_velvet"/>
+
+ <!-- Show in Rviz   -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find lwr_velvet_description)/launch/lwr_velvet.rviz"/>
+
+</launch>
