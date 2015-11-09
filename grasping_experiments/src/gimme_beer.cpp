@@ -218,7 +218,7 @@ namespace grasping_experiments
 
       if(!setJointConfiguration(gimme_beer_config_))
 	{
-	  ROS_ERROR("Could not set manipulator sensing configuration!");
+	  ROS_ERROR("Could not set manipulator gimme beer configuration!");
 	  safeShutdown();
 	  return false;
 	}

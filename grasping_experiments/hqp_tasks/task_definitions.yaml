@@ -143,7 +143,7 @@ task_definitions:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.17] 
+                  g_data: [0.0, 0.0, 1.0, 0.99] 
             - link_frame: lwr_link_3
               geometries: 
                 - g_type: 10 #sphere
@@ -163,7 +163,7 @@ task_definitions:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.17] 
+                  g_data: [0.0, 0.0, 1.0, 0.99] 
             - link_frame: lwr_link_4
               geometries: 
                 - g_type: 10 #sphere
@@ -183,7 +183,7 @@ task_definitions:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.17] 
+                  g_data: [0.0, 0.0, 1.0, 0.99] 
             - link_frame: lwr_link_5
               geometries: 
                 - g_type: 10 #sphere
@@ -203,7 +203,7 @@ task_definitions:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.17] 
+                  g_data: [0.0, 0.0, 1.0, 0.99] 
             - link_frame: lwr_link_6
               geometries: 
                 - g_type: 10 #sphere
@@ -223,7 +223,7 @@ task_definitions:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.17] 
+                  g_data: [0.0, 0.0, 1.0, 0.99] 
             - link_frame: velvet_fingers_palm
               geometries: 
                 - g_type: 10 #sphere
@@ -243,7 +243,7 @@ task_definitions:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.17] 
+                  g_data: [0.0, 0.0, 1.0, 0.99] 
             - link_frame: velvet_fingers_palm
               geometries: 
                 - g_type: 1 #point

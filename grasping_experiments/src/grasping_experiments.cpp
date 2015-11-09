@@ -121,49 +121,37 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
 #endif
 
     sensing_config_ = std::vector<double>(n_jnts);
-    sensing_config_[0] = 1.274;
-    sensing_config_[1] = -1.85;
-    sensing_config_[2] = -0.367;
-    sensing_config_[3] = -1.885;
-    sensing_config_[4] = -0.122;
-    sensing_config_[5] = 0.91;
-    sensing_config_[6] = -1.483;
+    sensing_config_[0] = 2.26;
+    sensing_config_[1] = 1.6;
+    sensing_config_[2] = 0.09;
+    sensing_config_[3] = 1.69;
+    sensing_config_[4] = -0.09;
+    sensing_config_[5] = -1.69;
+    sensing_config_[6] = -1.47;
 #ifdef HQP_GRIPPER_JOINT
     sensing_config_[7] = 0.1;
 #endif
 
     gimme_beer_config_ = std::vector<double>(n_jnts);
-    gimme_beer_config_[0] = 0.14;
-    gimme_beer_config_[1] = -1.46;
-    gimme_beer_config_[2] = -0.87;
-    gimme_beer_config_[3] = -0.82;
-    gimme_beer_config_[4] = 0.02;
-    gimme_beer_config_[5] = 0.57;
-    gimme_beer_config_[6] = -0.001;
+    gimme_beer_config_[0] = 2.26;
+    gimme_beer_config_[1] = 1.6;
+    gimme_beer_config_[2] = 0.09;
+    gimme_beer_config_[3] = 1.69;
+    gimme_beer_config_[4] = -0.09;
+    gimme_beer_config_[5] = -1.69;
+    gimme_beer_config_[6] = -1.47;
 #ifdef HQP_GRIPPER_JOINT
     gimme_beer_config_[7] = 0.1;
 #endif
 
-    look_beer_config_ = std::vector<double>(n_jnts);
-    look_beer_config_[0] = -1.57;
-    look_beer_config_[1] = -0.81;
-    look_beer_config_[2] = 1.57;
-    look_beer_config_[3] = 1.2;
-    look_beer_config_[4] = 0.0;
-    look_beer_config_[5] = 1.2;
-    look_beer_config_[6] = 0.0;
-#ifdef HQP_GRIPPER_JOINT
-    look_beer_config_[7] = 0.1;
-#endif
-
     //DEFAULT GRASP
-    grasp_.obj_frame_ = "citi_truck_base"; //object frame
+    grasp_.obj_frame_ = "world"; //object frame
     grasp_.e_frame_ = "velvet_fingers_palm"; //endeffector frame
     grasp_.e_.setZero(); //endeffector point expressed in the endeffector frame
 
 #ifdef PILE_GRASPING
-    grasp_.a_(0) = 1.0; grasp_.a_(1) = 0.0; grasp_.a_(2) = 0.0;
-    grasp_.p_(0) = 0.75; grasp_.p_(1) = -0.8; grasp_.p_(2) = 0.26;
+    grasp_.a_(0) = 0.0; grasp_.a_(1) = -1.0; grasp_.a_(2) = 0.0;
+    grasp_.p_(0) = -0.75; grasp_.p_(1) = 0.3; grasp_.p_(2) = 1.065;
 #else
     grasp_.v_(0) = 0.0; grasp_.v_(1) = 0.0; grasp_.v_(2) = 1.0; //cylinder normal
     grasp_.p_(0) = 0.9; grasp_.p_(1) = -0.9; grasp_.p_(2) = 0.16; //reference point on the cylinder axis
@@ -174,7 +162,7 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
 
     //PLACEMENT ZONES
     PlaceInterval place;
-    place.place_frame_ = "citi_truck_base";
+    place.place_frame_ = "world";
     place.e_frame_ = "velvet_fingers_palm";
     place.e_(0) = 0.16; place.e_(1) = 0.0; place.e_(2) = 0.0;
     place.v_(0) = 0.0; place.v_(1) = 0.0; place.v_(2) = 1.0;
@@ -377,9 +365,9 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
 
     task.t_type = hqp_controllers_msgs::Task::PROJECTION;
     task.priority = 2;
-    task.name = "lbr_iiwa_link_4_above_horizontal_plane (joint configuration)";
+    task.name = "lwr_link_4_above_horizontal_plane (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.02;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -390,7 +378,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::PLANE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
     t_geom.g_data.push_back(SAFETY_HEIGHT);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -399,7 +387,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
     t_geom.g_data.push_back(0.12);
-    t_link.link_frame = "lbr_iiwa_link_4";
+    t_link.link_frame = "lwr_link_4";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -411,9 +399,9 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
 
     task.t_type = hqp_controllers_msgs::Task::PROJECTION;
     task.priority = 2;
-    task.name = "lbr_iiwa_link_5_above_horizontal_plane (joint configuration)";
+    task.name = "lwr_link_5_above_horizontal_plane (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.02;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -424,7 +412,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::PLANE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
     t_geom.g_data.push_back(SAFETY_HEIGHT);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -433,7 +421,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
     t_geom.g_data.push_back(0.075);
-    t_link.link_frame = "lbr_iiwa_link_5";
+    t_link.link_frame = "lwr_link_5";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -445,9 +433,9 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
 
     task.t_type = hqp_controllers_msgs::Task::PROJECTION;
     task.priority = 2;
-    task.name = "lbr_iiwa_link_6_above_horizontal_plane (joint configuration)";
+    task.name = "lwr_link_6_above_horizontal_plane (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.02;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -458,7 +446,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::PLANE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
     t_geom.g_data.push_back(SAFETY_HEIGHT);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -467,7 +455,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
     t_geom.g_data.push_back(0.1);
-    t_link.link_frame = "lbr_iiwa_link_6";
+    t_link.link_frame = "lwr_link_6";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -481,7 +469,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     task.priority = 2;
     task.name = "velvet_fingers_palm_above_horizontal_plane (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.02;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -492,7 +480,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::PLANE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
     t_geom.g_data.push_back(SAFETY_HEIGHT);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -515,7 +503,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     task.priority = 2;
     task.name = "point_behind_vertical_plane (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.02;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -526,7 +514,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::PLANE;
     t_geom.g_data.push_back(-1); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
     t_geom.g_data.push_back(-grasp_.p_(0));
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -539,7 +527,6 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     task.t_links.push_back(t_link);
 
     tasks_.request.tasks.push_back(task);
-#endif
 
       //PALM ABOVE HORIZONTAL PLANE
     task.t_links.clear();
@@ -549,7 +536,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     task.priority = 2;
     task.name = "velvet_fingers_palm_above_horizontal_plane (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.02;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -560,7 +547,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::PLANE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
     t_geom.g_data.push_back(SAFETY_HEIGHT);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -583,7 +570,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     task.priority = 2;
     task.name = "right_finger_above_horizontal_plane (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.02;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -594,7 +581,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::PLANE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
     t_geom.g_data.push_back(0.2);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -617,7 +604,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     task.priority = 2;
     task.name = "velvet_fingers_palm_above_horizontal_plane (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.02;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -628,7 +615,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::PLANE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
     t_geom.g_data.push_back(0.2);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -651,7 +638,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     task.priority = 2;
     task.name = "right_finger_avoid_beer (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.5;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -671,7 +658,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(grasp_.p_(0)+BEER_RADIUS); t_geom.g_data.push_back(-0.9); t_geom.g_data.push_back(BEER_HEIGHT);
     t_geom.g_data.push_back(BEER_RADIUS);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -685,7 +672,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     task.priority = 2;
     task.name = "right_finger_avoid_beer (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.5;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -705,7 +692,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(grasp_.p_(0)+BEER_RADIUS); t_geom.g_data.push_back(-0.9); t_geom.g_data.push_back(BEER_HEIGHT);
     t_geom.g_data.push_back(BEER_RADIUS);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -717,9 +704,9 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
 
     task.t_type = hqp_controllers_msgs::Task::PROJECTION;
     task.priority = 2;
-    task.name = "lbr_iiwa_link_4_avoid_beer (joint configuration)";
+    task.name = "lwr_link_4_avoid_beer (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.5;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -730,7 +717,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
     t_geom.g_data.push_back(0.12);
-    t_link.link_frame = "lbr_iiwa_link_4";
+    t_link.link_frame = "lwr_link_4";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -739,7 +726,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(grasp_.p_(0)+BEER_RADIUS); t_geom.g_data.push_back(-0.9); t_geom.g_data.push_back(BEER_HEIGHT);
     t_geom.g_data.push_back(BEER_RADIUS);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -751,9 +738,9 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
 
     task.t_type = hqp_controllers_msgs::Task::PROJECTION;
     task.priority = 2;
-    task.name = "lbr_iiwa_link_5_avoid_beer (joint configuration)";
+    task.name = "lwr_link_5_avoid_beer (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.5;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -764,7 +751,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
     t_geom.g_data.push_back(0.075);
-    t_link.link_frame = "lbr_iiwa_link_5";
+    t_link.link_frame = "lwr_link_5";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -773,7 +760,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(grasp_.p_(0)+BEER_RADIUS); t_geom.g_data.push_back(-0.9); t_geom.g_data.push_back(BEER_HEIGHT);
     t_geom.g_data.push_back(BEER_RADIUS);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -785,9 +772,9 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
 
     task.t_type = hqp_controllers_msgs::Task::PROJECTION;
     task.priority = 2;
-    task.name = "lbr_iiwa_link_6_avoid_beer (joint configuration)";
+    task.name = "lwr_link_6_avoid_beer (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.5;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -798,7 +785,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
     t_geom.g_data.push_back(0.1);
-    t_link.link_frame = "lbr_iiwa_link_6";
+    t_link.link_frame = "lwr_link_6";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -807,7 +794,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(grasp_.p_(0)+BEER_RADIUS); t_geom.g_data.push_back(-0.9); t_geom.g_data.push_back(BEER_HEIGHT);
     t_geom.g_data.push_back(BEER_RADIUS);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -821,7 +808,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     task.priority = 2;
     task.name = "velvet_fingers_palm_avoid_beer (joint configuration)";
     task.is_equality_task = false;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 0.5;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -841,12 +828,12 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
     t_geom.g_data.push_back(grasp_.p_(0)+BEER_RADIUS); t_geom.g_data.push_back(-0.9); t_geom.g_data.push_back(BEER_HEIGHT);
     t_geom.g_data.push_back(BEER_RADIUS);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
     tasks_.request.tasks.push_back(task);
-
+#endif
 
     //SET JOINT VALUES
     t_link.geometries.resize(1);
@@ -857,7 +844,7 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
     task.priority = 3;
     task.name = "joint_setpoints";
     task.is_equality_task = true;
-    task.task_frame = "citi_truck_base";
+    task.task_frame = "world";
     task.ds = 0.0;
     task.di = 1;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
@@ -866,37 +853,37 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
 
     t_geom.g_data[0] = joints[0];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lbr_iiwa_link_1";
+    t_link.link_frame = "lwr_link_1";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[1];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lbr_iiwa_link_2";
+    t_link.link_frame = "lwr_link_2";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[2];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lbr_iiwa_link_3";
+    t_link.link_frame = "lwr_link_3";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[3];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lbr_iiwa_link_4";
+    t_link.link_frame = "lwr_link_4";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[4];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lbr_iiwa_link_5";
+    t_link.link_frame = "lwr_link_5";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[5];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lbr_iiwa_link_6";
+    t_link.link_frame = "lwr_link_6";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[6];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lbr_iiwa_link_7";
+    t_link.link_frame = "lwr_link_7";
     task.t_links.push_back(t_link);
 
 #ifdef HQP_GRIPPER_JOINT
@@ -993,7 +980,7 @@ bool GraspingExperiments::setObjectPlace(PlaceInterval const& place)
     t_geom.g_data.push_back(place.p_(0)); t_geom.g_data.push_back(place.p_(1)); t_geom.g_data.push_back(place.p_(2));
     t_geom.g_data.push_back(place.v_(0)); t_geom.g_data.push_back(place.v_(1)); t_geom.g_data.push_back(place.v_(2));
     t_geom.g_data.push_back(place.r_);
-    t_link.link_frame = "citi_truck_base";
+    t_link.link_frame = "world";
     t_link.geometries.push_back(t_geom);
     task.t_links.push_back(t_link);
 
@@ -1354,9 +1341,9 @@ bool GraspingExperiments::setGraspApproach()
     hqp_controllers_msgs::TaskGeometry t_geom;
 
 #ifdef PILE_GRASPING
-    ROS_ASSERT(grasp_.p_(0) >= 0.0);
-    ROS_ASSERT(grasp_.p_(2) >= 0.23);
-    ROS_ASSERT(grasp_.a_(0) >= 0.0);
+    ROS_ASSERT(grasp_.p_(0) <= 0.0);
+    ROS_ASSERT(grasp_.p_(2) >= 1.06);
+    ROS_ASSERT(grasp_.a_(1) < 0.0);
 
     //EE ON HORIZONTAL PLANE
     task.t_links.clear();
