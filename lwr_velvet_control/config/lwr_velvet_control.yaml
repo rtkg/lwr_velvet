@@ -8,26 +8,26 @@
     type: velocity_controllers/JointGroupVelocityController
 #    type: velocity_controllers/JointVelocityController
     joints:
-      - lwr_joint_1
-      - lwr_joint_2
-      - lwr_joint_3
-      - lwr_joint_4
-      - lwr_joint_5
-      - lwr_joint_6
-      - lwr_joint_7
+      - lwr_0_joint
+      - lwr_1_joint
+      - lwr_2_joint
+      - lwr_3_joint
+      - lwr_4_joint
+      - lwr_5_joint
+      - lwr_6_joint
       - velvet_fingers_joint_1
 
   # HQP Velocity Controller ----------------------------------------
   lwr_velvet_hqp_vel_controller:
     type: hqp_controllers/HQPVelocityController
     joints:
-      - lwr_joint_1
-      - lwr_joint_2
-      - lwr_joint_3
-      - lwr_joint_4
-      - lwr_joint_5
-      - lwr_joint_6
-      - lwr_joint_7
+      - lwr_0_joint
+      - lwr_1_joint
+      - lwr_2_joint
+      - lwr_3_joint
+      - lwr_4_joint
+      - lwr_5_joint
+      - lwr_6_joint
 #      - velvet_fingers_joint_1
 
 

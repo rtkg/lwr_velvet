@@ -37,7 +37,7 @@
                 }, 
                 "topics": {
                   "type": "repr", 
-                  "repr": "[u'/lwr/joint_states/velocity[1]', u'/lwr/lwr_joint_2_forward_vel_controller/command/data']"
+                  "repr": "[u'/lwr/joint_states/velocity[1]', u'/lwr/lwr_2_joint_forward_vel_controller/command/data']"
                 }
               }, 
               "groups": {}
@@ -64,7 +64,7 @@
               "keys": {
                 "publishers": {
                   "type": "repr", 
-                  "repr": "u\"[{'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_joint_1_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 0, 'counter': 0}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_joint_2_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {u'/lwr/lwr_joint_2_forward_vel_controller/command/data': '-0.01'}, 'publisher_id': 1, 'counter': 76}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_joint_3_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 2, 'counter': 0}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_joint_4_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 3, 'counter': 0}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_joint_5_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 4, 'counter': 0}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_joint_6_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 5, 'counter': 0}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_joint_7_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 6, 'counter': 0}]\""
+                  "repr": "u\"[{'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_0_joint_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 0, 'counter': 0}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_1_joint_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {u'/lwr/lwr_1_joint_forward_vel_controller/command/data': '-0.01'}, 'publisher_id': 1, 'counter': 76}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_3_joint_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 2, 'counter': 0}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_4_joint_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 3, 'counter': 0}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_5_joint_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 4, 'counter': 0}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_6_joint_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 5, 'counter': 0}, {'type_name': 'std_msgs/Float64', 'topic_name': '/lwr/lwr_6_joint_forward_vel_controller/command', 'enabled': False, 'rate': 1.0, 'expressions': {}, 'publisher_id': 6, 'counter': 0}]\""
                 }
               }, 
               "groups": {}

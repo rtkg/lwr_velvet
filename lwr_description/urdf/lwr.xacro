@@ -10,22 +10,16 @@
   <!-- Include Materials -->
   <xacro:include filename="$(find lwr_description)/urdf/materials.xacro"/>
 
-  <!-- my constants
-       <xacro:property name="joint_damping" value="0.5" />
-       <xacro:property name="max_effort" value="300"/>
-       <xacro:property name="max_velocity" value="10"/-->
-
-
   <!-- properties /-->
   <xacro:property name="base_mass" value="2.0"/>
   <xacro:property name="link_mass" value="2.0"/>
   <xacro:property name="velocity_scale" value="1"/>
   <xacro:property name="effort_scale" value="1"/>
 
-  <!-- reflex to stiffness 
-       <xacro:property name="max_stiffness" value="5000"/>
-       <xacro:property name="min_stiffness" value="0"/>
-       <xacro:property name="rate_stiffness" value="20000"/--> 
+  <!-- reflex to stiffness--> 
+  <xacro:property name="max_stiffness" value="5000"/>
+  <xacro:property name="min_stiffness" value="0"/>
+  <xacro:property name="rate_stiffness" value="20000"/> 
 
   <xacro:macro name="lwr" params="parent name hardware_interface *origin">
 
@@ -33,10 +27,10 @@
     <joint name="${parent}_joint" type="fixed">
       <insert_block name="origin"/>
       <parent link="${parent}"/>
-      <child link="${name}_link_0"/>
+      <child link="${name}_0_link"/>
     </joint>
 
-    <link name="${name}_link_0">
+    <link name="${name}_0_link">
       <inertial>
 	<mass value="${base_mass}"/>
 	<origin xyz="0 0 0.055"  />
@@ -59,18 +53,25 @@
     </link>
 
     <!-- Second segment of the arm. Joint along z-axis -->
-    <joint name="${name}_joint_1" type="revolute">
+    <joint name="${name}_0_joint" type="revolute">
       <origin xyz="0 0 0.11" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
       <limit lower="${-170 * PI / 180}" upper="${170 * PI / 180}" effort="176" velocity="${velocity_scale * 110 * PI / 180}" />
       <dynamics friction="10.0" damping="1.0"/>
-      <parent link="${name}_link_0"/>
-      <child link="${name}_link_1"/>
+      <parent link="${name}_0_link"/>
+      <child link="${name}_1_link"/>
     </joint>
 
+    <joint name="${name}_0_joint_stiffness" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit lower="${min_stiffness}" upper="${max_stiffness}" effort="0" velocity="${rate_stiffness}" />
+      <safety_controller soft_lower_limit="${min_stiffness}" soft_upper_limit="${max_stiffness}" k_position="30" k_velocity="30"/>
+      <parent link="${name}_0_link"/>
+      <child link="${name}_1_link_dummy"/>
+    </joint>
+    <link name="${name}_1_link_dummy"/>
 
-
-    <link name="${name}_link_1">
+    <link name="${name}_1_link">
       <inertial>
 	<mass value="${link_mass}"/>
 	<origin rpy="0 0 0" xyz="0 -0.06 0.130"/>
@@ -106,16 +107,25 @@
 
 
     <!-- Third segment of the arm. Joint along y-axis -->
-    <joint name="${name}_joint_2" type="revolute">
+    <joint name="${name}_1_joint" type="revolute">
       <origin xyz="0 0 0.2005" rpy="0 0 0"/>
       <axis xyz="0 -1 0"/>
       <limit lower="${-120 * PI / 180}" upper="${120 * PI / 180}" effort="176" velocity="${velocity_scale * 110 * PI / 180}" />
       <dynamics friction="10.0" damping="1.0"/>
-      <parent link="${name}_link_1"/>
-      <child link="${name}_link_2"/>
+      <parent link="${name}_1_link"/>
+      <child link="${name}_2_link"/>
     </joint>
 
-    <link name="${name}_link_2">
+    <joint name="${name}_1_joint_stiffness" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit lower="${min_stiffness}" upper="${max_stiffness}" effort="0" velocity="${rate_stiffness}" />
+      <safety_controller soft_lower_limit="${min_stiffness}" soft_upper_limit="${max_stiffness}" k_position="30" k_velocity="30"/>
+      <parent link="${name}_1_link"/>
+      <child link="${name}_2_link_dummy"/>
+    </joint>
+    <link name="${name}_2_link_dummy"/>
+
+    <link name="${name}_2_link">
       <inertial>
 	<mass value="${link_mass}"/>
 	<origin rpy="0 0 0" xyz="0 0.06 ${0.130 - 0.06}"/>
@@ -152,17 +162,25 @@
 
 
     <!-- Fourth element of the arm. z-axis -->
-    <joint name="${name}_joint_3" type="revolute">
+    <joint name="${name}_2_joint" type="revolute">
       <origin xyz="0 0 0.20" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
       <limit lower="${-170 * PI / 180}" upper="${170 * PI / 180}" effort="100" velocity="${velocity_scale * 128 * PI / 180}" />
       <dynamics friction="10.0" damping="1.0"/>
-      <parent link="${name}_link_2"/>
-      <child link="${name}_link_3"/>
+      <parent link="${name}_2_link"/>
+      <child link="${name}_3_link"/>
     </joint>
 
+    <joint name="${name}_2_joint_stiffness" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit lower="${min_stiffness}" upper="${max_stiffness}" effort="0" velocity="${rate_stiffness}" />
+      <safety_controller soft_lower_limit="${min_stiffness}" soft_upper_limit="${max_stiffness}" k_position="30" k_velocity="30"/>
+      <parent link="${name}_2_link"/>
+      <child link="${name}_3_link_dummy"/>
+    </joint>
+    <link name="${name}_3_link_dummy"/>
 
-    <link name="${name}_link_3">
+    <link name="${name}_3_link">
       <inertial>
 	<mass value="${link_mass}"/>
 	<origin rpy="0 0 0" xyz="0 0.06 0.130"/>
@@ -198,17 +216,25 @@
     </link>
 
     <!-- fifth element of the arm. x-axis -->
-    <joint name="${name}_joint_4" type="revolute">
+    <joint name="${name}_3_joint" type="revolute">
       <origin xyz="0 0 0.20" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
       <limit lower="${-120 * PI / 180}" upper="${120 * PI / 180}" effort="100" velocity="${velocity_scale * 128 * PI / 180}" />
       <dynamics friction="10.0" damping="1.0"/>
-      <parent link="${name}_link_3"/>
-      <child link="${name}_link_4"/>
+      <parent link="${name}_3_link"/>
+      <child link="${name}_4_link"/>
     </joint>
 
+    <joint name="${name}_3_joint_stiffness" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit lower="${min_stiffness}" upper="${max_stiffness}" effort="0" velocity="${rate_stiffness}" />
+      <safety_controller soft_lower_limit="${min_stiffness}" soft_upper_limit="${max_stiffness}" k_position="30" k_velocity="30"/>
+      <parent link="${name}_3_link"/>
+      <child link="${name}_4_link_dummy"/>
+    </joint>
+    <link name="${name}_4_link_dummy"/>
 
-    <link name="${name}_link_4">
+    <link name="${name}_4_link">
       <inertial>
 	<mass value="${link_mass}"/>
 	<origin rpy="0 0 0" xyz="0 -0.06 ${0.130 - 0.06}"/>
@@ -244,17 +270,25 @@
     </link>
 
     <!-- Sixth element of the arm. z-axis -->
-    <joint name="${name}_joint_5" type="revolute">
+    <joint name="${name}_4_joint" type="revolute">
       <origin xyz="0 0 0.20" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
       <limit lower="${-170 * PI / 180}" upper="${170 * PI / 180}" effort="100" velocity="${velocity_scale * 204 * PI / 180}" />
       <dynamics friction="10.0" damping="1.0"/>
-      <parent link="${name}_link_4"/>
-      <child link="${name}_link_5"/>
+      <parent link="${name}_4_link"/>
+      <child link="${name}_5_link"/>
     </joint>
 
+    <joint name="${name}_4_joint_stiffness" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit lower="${min_stiffness}" upper="${max_stiffness}" effort="0" velocity="${rate_stiffness}" />
+      <safety_controller soft_lower_limit="${min_stiffness}" soft_upper_limit="${max_stiffness}" k_position="30" k_velocity="30"/>
+      <parent link="${name}_4_link"/>
+      <child link="${name}_5_link_dummy"/>
+    </joint>
+    <link name="${name}_5_link_dummy"/>
 
-    <link name="${name}_link_5">
+    <link name="${name}_5_link">
       <inertial>
 	<mass value="${link_mass}"/>
 	<origin rpy="0 0 0" xyz="0 0 0.124"/>
@@ -291,17 +325,25 @@
     </link>
 
     <!-- Seventh element of the arm. z-axis -->
-    <joint name="${name}_joint_6" type="revolute">
+    <joint name="${name}_5_joint" type="revolute">
       <origin xyz="0 0 0.19" rpy="0 0 0"/>
       <axis xyz="0 -1 0"/>
       <limit lower="${-120 * PI / 180}" upper="${120 * PI / 180}" effort="38" velocity="${velocity_scale * 184 * PI / 180}" />
       <dynamics friction="10.0" damping="1.0"/>
-      <parent link="${name}_link_5"/>
-      <child link="${name}_link_6"/>
+      <parent link="${name}_5_link"/>
+      <child link="${name}_6_link"/>
     </joint>
 
+    <joint name="${name}_5_joint_stiffness" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit lower="${min_stiffness}" upper="${max_stiffness}" effort="0" velocity="${rate_stiffness}" />
+      <safety_controller soft_lower_limit="${min_stiffness}" soft_upper_limit="${max_stiffness}" k_position="30" k_velocity="30"/>
+      <parent link="${name}_5_link"/>
+      <child link="${name}_6_link_dummy"/>
+    </joint>
+    <link name="${name}_6_link_dummy"/>
 
-    <link name="${name}_link_6">
+    <link name="${name}_6_link">
       <inertial>
 	<mass value="0.2"/>
 	<origin rpy="0 0 0" xyz="0 0 0.0625"/>
@@ -324,17 +366,25 @@
     </link>
 
     <!-- Eighth element of the arm. z-axis -->
-    <joint name="${name}_joint_7" type="revolute">
+    <joint name="${name}_6_joint" type="revolute">
       <origin xyz="0 0 0.078" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
       <limit lower="${-170 * PI / 180}" upper="${170 * PI / 180}" effort="38" velocity="${velocity_scale * 184 * PI / 180}" />
       <dynamics friction="10.0" damping="1.0"/>
-      <parent link="${name}_link_6"/>
-      <child link="${name}_link_7"/>
+      <parent link="${name}_6_link"/>
+      <child link="${name}_7_link"/>
     </joint>
 
+    <joint name="${name}_6_joint_stiffness" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit lower="${min_stiffness}" upper="${max_stiffness}" effort="0" velocity="${rate_stiffness}" />
+      <safety_controller soft_lower_limit="${min_stiffness}" soft_upper_limit="${max_stiffness}" k_position="30" k_velocity="30"/>
+      <parent link="${name}_6_link"/>
+      <child link="${name}_7_link_dummy"/>
+    </joint>
+    <link name="${name}_7_link_dummy"/>
 
-    <link name="${name}_link_7">
+    <link name="${name}_7_link">
       <inertial>
 	<mass value="0.2"/>
 	<origin xyz="0 0 0"/>

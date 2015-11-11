@@ -4,13 +4,13 @@
   <!-- these arguments you can pass this launch file-->
   <arg name="hardware_interface" default="EffortJointInterface"/>
   <arg name="controllers" default="joint_state_controller 
-                                   lwr_joint_1_effort_pos_controller
-				   lwr_joint_2_effort_pos_controller
-				   lwr_joint_3_effort_pos_controller
-				   lwr_joint_4_effort_pos_controller
-				   lwr_joint_5_effort_pos_controller
-				   lwr_joint_6_effort_pos_controller
-				   lwr_joint_7_effort_pos_controller"/>
+                                   lwr_0_joint_effort_pos_controller
+				   lwr_1_joint_effort_pos_controller
+				   lwr_2_joint_effort_pos_controller
+				   lwr_3_joint_effort_pos_controller
+				   lwr_4_joint_effort_pos_controller
+				   lwr_5_joint_effort_pos_controller
+				   lwr_6_joint_effort_pos_controller"/>
 
  <!-- Load the URDF with the given hardware interface into the ROS Parameter Server -->
   <param name="robot_description"

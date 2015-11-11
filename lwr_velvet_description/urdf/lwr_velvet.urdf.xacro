@@ -60,7 +60,7 @@
   </xacro:soft_hand-->
 
   <!--velvet fingers gripper-->
-  <xacro:velvet_fingers name="velvet_fingers" hardware_interface="$(arg prefix)" parent="lwr_link_7">
+  <xacro:velvet_fingers name="velvet_fingers" hardware_interface="$(arg prefix)" parent="lwr_7_link">
     <origin xyz="0 0 0.02" rpy="0 ${-PI / 2} 0" />
   </xacro:velvet_fingers>
 

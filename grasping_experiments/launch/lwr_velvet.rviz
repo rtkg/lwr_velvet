@@ -59,42 +59,42 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        lwr_link_0:
+        lwr_0_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lwr_link_1:
+        lwr_1_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lwr_link_2:
+        lwr_2_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lwr_link_3:
+        lwr_3_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lwr_link_4:
+        lwr_4_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lwr_link_5:
+        lwr_5_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lwr_link_6:
+        lwr_6_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lwr_link_7:
+        lwr_7_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false

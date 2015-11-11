@@ -10,13 +10,13 @@
 <include file="$(find lwr_velvet_control)/launch/lwr_velvet_control.launch">
   <arg name="hardware_interface" value="PositionJointInterface" />
   <arg name="controllers" value="joint_state_controller
-			         lwr_joint_1_forward_pos_controller
-				 lwr_joint_2_forward_pos_controller
-				 lwr_joint_3_forward_pos_controller
-				 lwr_joint_4_forward_pos_controller
-				 lwr_joint_5_forward_pos_controller
-				 lwr_joint_6_forward_pos_controller
-				 lwr_joint_7_forward_pos_controller 
+			         lwr_0_joint_forward_pos_controller
+				 lwr_1_joint_forward_pos_controller
+				 lwr_2_joint_forward_pos_controller
+				 lwr_3_joint_forward_pos_controller
+				 lwr_4_joint_forward_pos_controller
+				 lwr_5_joint_forward_pos_controller
+				 lwr_6_joint_forward_pos_controller 
                                  velvet_fingers_joint_1_forward_pos_controller" />
 </include>
 

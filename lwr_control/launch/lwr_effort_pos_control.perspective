@@ -37,7 +37,7 @@
                 }, 
                 "topics": {
                   "type": "repr", 
-                  "repr": "[u'/lwr/lwr_joint_2_effort_pos_controller/command/data', u'/lwr/lwr_joint_2_effort_pos_controller/state/process_value']"
+                  "repr": "[u'/lwr/lwr_1_joint_effort_pos_controller/command/data', u'/lwr/lwr_1_joint_effort_pos_controller/state/process_value']"
                 }
               }, 
               "groups": {}
@@ -64,7 +64,7 @@
               "keys": {
                 "publishers": {
                   "type": "repr", 
-                  "repr": "u\"[{'topic_name': '/lwr/lwr_joint_1_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 0, 'counter': 0}, {'topic_name': '/lwr/lwr_joint_2_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {u'/lwr/lwr_joint_2_effort_pos_controller/command/data': '-0.5'}, 'publisher_id': 1, 'counter': 0}, {'topic_name': '/lwr/lwr_joint_3_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 2, 'counter': 0}, {'topic_name': '/lwr/lwr_joint_4_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 3, 'counter': 0}, {'topic_name': '/lwr/lwr_joint_5_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 4, 'counter': 0}, {'topic_name': '/lwr/lwr_joint_6_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 5, 'counter': 0}, {'topic_name': '/lwr/lwr_joint_7_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 6, 'counter': 0}]\""
+                  "repr": "u\"[{'topic_name': '/lwr/lwr_0_joint_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 0, 'counter': 0}, {'topic_name': '/lwr/lwr_1_joint_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {u'/lwr/lwr_1_joint_effort_pos_controller/command/data': '-0.5'}, 'publisher_id': 1, 'counter': 0}, {'topic_name': '/lwr/lwr_2_joint_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 2, 'counter': 0}, {'topic_name': '/lwr/lwr_3_joint_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 3, 'counter': 0}, {'topic_name': '/lwr/lwr_5_joint_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 4, 'counter': 0}, {'topic_name': '/lwr/lwr_6_joint_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 5, 'counter': 0}, {'topic_name': '/lwr/lwr_6_joint_effort_pos_controller/command', 'type_name': 'std_msgs/Float64', 'enabled': False, 'rate': 1000.0, 'expressions': {}, 'publisher_id': 6, 'counter': 0}]\""
                 }
               }, 
               "groups": {}

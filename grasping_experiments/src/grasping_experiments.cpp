@@ -853,37 +853,37 @@ bool GraspingExperiments::setJointConfiguration(std::vector<double> const& joint
 
     t_geom.g_data[0] = joints[0];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lwr_link_1";
+    t_link.link_frame = "lwr_1_link";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[1];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lwr_link_2";
+    t_link.link_frame = "lwr_2_link";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[2];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lwr_link_3";
+    t_link.link_frame = "lwr_3_link";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[3];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lwr_link_4";
+    t_link.link_frame = "lwr_4_link";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[4];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lwr_link_5";
+    t_link.link_frame = "lwr_5_link";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[5];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lwr_link_6";
+    t_link.link_frame = "lwr_6_link";
     task.t_links.push_back(t_link);
 
     t_geom.g_data[0] = joints[6];
     t_link.geometries[0] = t_geom;
-    t_link.link_frame = "lwr_link_7";
+    t_link.link_frame = "lwr_7_link";
     task.t_links.push_back(t_link);
 
 #ifdef HQP_GRIPPER_JOINT
