@@ -181,7 +181,7 @@ Visualization Manager:
       Visual Enabled: true
     - Class: rviz/MarkerArray
       Enabled: true
-      Marker Topic: /lwr_velvet/lwr_velvet_hqp_vel_controller/task_geometries
+      Marker Topic: /lwr_velvet/lwr_velvet_hqp_eff_controller/task_geometries
       Name: Tasks
       Namespaces:
         {}
@@ -202,8 +202,6 @@ Visualization Manager:
     - Class: rviz/Measure
     - Class: rviz/SetInitialPose
       Topic: /initialpose
-    - Class: rviz/SetGoal
-      Topic: /move_base_simple/goal
     - Class: rviz/PublishPoint
       Single click: true
       Topic: /clicked_point

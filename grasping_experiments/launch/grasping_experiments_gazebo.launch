@@ -4,19 +4,20 @@
   <!-- launch the grasping_experiments node -->
   <node name="grasping_experiments" pkg="grasping_experiments" type="grasping_experiments" respawn="false" output="screen" >
      <param name="with_gazebo" type="bool" value="true"/>
-     <remap from="/task_status_array" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/task_status_array"/>
-     <remap from="/set_tasks" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/set_tasks"/>
-     <remap from="/remove_tasks" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/remove_tasks"/>
-     <remap from="/load_tasks" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/load_tasks"/>
-     <remap from="/activate_hqp_control" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/activate_hqp_control"/>
-     <remap from="/reset_hqp_control" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/reset_hqp_control"/>
-     <remap from="/visualize_task_geometries" to="/lwr_velvet/lwr_velvet_hqp_vel_controller/visualize_task_geometries"/>
+     <remap from="/task_status_array" to="/lwr_velvet/lwr_velvet_hqp_eff_controller/task_status_array"/>
+     <remap from="/set_tasks" to="/lwr_velvet/lwr_velvet_hqp_eff_controller/set_tasks"/>
+     <remap from="/remove_tasks" to="/lwr_velvet/lwr_velvet_hqp_eff_controller/remove_tasks"/>
+     <remap from="/load_tasks" to="/lwr_velvet/lwr_velvet_hqp_eff_controller/load_tasks"/>
+     <remap from="/activate_hqp_control" to="/lwr_velvet/lwr_velvet_hqp_eff_controller/activate_hqp_control"/>
+     <remap from="/reset_hqp_control" to="/lwr_velvet/lwr_velvet_hqp_eff_controller/reset_hqp_control"/>
+     <remap from="/visualize_task_geometries" to="/lwr_velvet/lwr_velvet_hqp_eff_controller/visualize_task_geometries"/>
      <remap from="/set_physics_properties" to="/gazebo/set_physics_properties"/>
      <remap from="/joint_states" to="/lwr_velvet/joint_states"/>
   </node>
 
 <!-- Launch the HQP velocity controller with gazebo -->
-  <include file="$(find lwr_velvet_launch)/launch/lwr_velvet_gazebo_hqp_vel_control.launch" />
+ <include file="$(find lwr_velvet_launch)/launch/lwr_velvet_gazebo_hqp_eff_control.launch" /> <!-- effort controllers -->
+  <!--include file="$(find lwr_velvet_launch)/launch/lwr_velvet_gazebo_hqp_vel_control.launch" /--> <!--velocity controllers -->
 
  <!--load predifined persistent task descriptions (joint limit avoidance, self-collision avoidance ...) definitions for the HQP controller -->
  <rosparam file="$(find grasping_experiments)/hqp_tasks/task_definitions.yaml" command="load" ns="/lwr_velvet"/>
