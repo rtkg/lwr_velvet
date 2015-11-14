@@ -14,7 +14,7 @@
 
   <run_depend>lwr_description</run_depend>
   <run_depend>velvet_fingers_description</run_depend>
-
+<run_depend>lwr_velvet_gazebo</run_depend>
   <export>
   </export>
 

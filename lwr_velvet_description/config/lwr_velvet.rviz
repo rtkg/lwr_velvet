@@ -5,10 +5,9 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /RobotModel1/Links1
-        - /TF1/Tree1
-      Splitter Ratio: 0.85906
-    Tree Height: 410
+        - /Status1
+      Splitter Ratio: 0.463497
+    Tree Height: 693
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -49,14 +48,6 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
-    - Class: rviz/MarkerArray
-      Enabled: true
-      Marker Topic: /apple/apple_hqp_vel_controller/task_objects
-      Name: Task Objects
-      Namespaces:
-        {}
-      Queue Size: 100
-      Value: true
     - Alpha: 1
       Class: rviz/RobotModel
       Collision Enabled: false
@@ -67,42 +58,70 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        right_arm_link_0:
+        lwr_1_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_arm_link_1:
+        lwr_1_link_dummy:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lwr_2_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_arm_link_2:
+        lwr_2_link_dummy:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lwr_3_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_arm_link_3:
+        lwr_3_link_dummy:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lwr_4_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_arm_link_4:
+        lwr_4_link_dummy:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lwr_5_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_arm_link_5:
+        lwr_5_link_dummy:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lwr_6_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_arm_link_6:
+        lwr_6_link_dummy:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lwr_7_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_arm_link_7:
+        lwr_7_link_dummy:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lwr_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -133,6 +152,21 @@ Visualization Manager:
           Show Trail: false
           Value: true
         torso_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        velvet_fingers_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        velvet_fingers_palm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        velvet_fingers_right:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -172,23 +206,9 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
-    - Class: rviz/TF
-      Enabled: false
-      Frame Timeout: 15
-      Frames:
-        All Enabled: true
-      Marker Scale: 1
-      Name: TF
-      Show Arrows: true
-      Show Axes: true
-      Show Names: true
-      Tree:
-        {}
-      Update Interval: 0
-      Value: false
   Enabled: true
   Global Options:
-    Background Color: 190; 187; 187
+    Background Color: 255; 251; 208
     Fixed Frame: world
     Frame Rate: 30
   Name: root
@@ -210,30 +230,30 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 4.02273
+      Distance: 6.31746
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.911216
-        Y: 0.0230921
-        Z: 0.196509
+        X: -0.666285
+        Y: -0.21859
+        Z: 0.139896
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.155202
+      Pitch: 0.825398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.18715
+      Yaw: 2.9504
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 691
+  Height: 974
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000013c00000229fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006400fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000002800000229000000dd00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000001a4fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a005600690065007700730000000028000001a4000000b000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000005560000003efc0100000002fb0000000800540069006d0065010000000000000556000002f600fffffffb0000000800540069006d00650100000000000004500000000000000000000004140000022900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000024f00000344fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006400fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000002800000344000000dd00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f00000344fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000002800000344000000b000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000064f0000003efc0100000002fb0000000800540069006d006501000000000000064f000002f600fffffffb0000000800540069006d00650100000000000004500000000000000000000002e50000034400000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -242,6 +262,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1366
-  X: 55
-  Y: 14
+  Width: 1615
+  X: 308
+  Y: 38

@@ -50,7 +50,7 @@
   <run_depend>hqp_controllers_msgs</run_depend>
 <run_depend>gazebo_msgs</run_depend>
   <run_depend>roscpp</run_depend>
-
+<run_depend>lwr_velvet_launch</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
