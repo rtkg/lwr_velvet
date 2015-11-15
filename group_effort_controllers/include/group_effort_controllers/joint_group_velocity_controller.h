@@ -57,7 +57,7 @@ private:
     // CALLBACKS //
     ///////////////
 
- void setCommandCB(const std_msgs::Float64ConstPtr& msg);
+ void setCommandCB(const std_msgs::Float64ConstPtr& msg, unsigned int i);
 
 };
 

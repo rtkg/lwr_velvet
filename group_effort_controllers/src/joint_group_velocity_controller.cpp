@@ -55,7 +55,8 @@ namespace group_effort_controllers
 
  for (unsigned int i=0; i<n_joints_;i++)
    {
-     boost::shared_ptr<ros::Subscriber> ptr(new ros::Subscriber(n.subscribe<std_msgs::Float64>(joints_[i].getName()+"/command", 1, &JointGroupVelocityController::setCommandCB, this)));
+     boost::shared_ptr<ros::Subscriber> ptr(new ros::Subscriber(n.subscribe<std_msgs::Float64>(joints_[i].getName()+"/command", 1, boost::bind(&JointGroupVelocityController::setCommandCB, this, _1, i))));
+	// sub[i] = node.subscribe(sub_name, 1, boost::bind(&MyClass::callback, this, _1, i));
      command_sub_.push_back(ptr);
    }
 
@@ -125,9 +126,9 @@ namespace group_effort_controllers
   ///////////////
 
   //-----------------------------------------------------------------------
-  void JointGroupVelocityController::setCommandCB(const std_msgs::Float64ConstPtr& msg)
+  void JointGroupVelocityController::setCommandCB(const std_msgs::Float64ConstPtr& msg, unsigned int i)
   {
-    std::cerr<<"In setCommandCB..."<<std::endl;
+    commands_(i) = msg->data;
 }
 
   //-----------------------------------------------------------------------
