@@ -1,0 +1,11 @@
+<library path="lib/libgroup_effort_controllers">
+
+  <class name="group_effort_controllers/JointGroupVelocityController" 
+         type="group_effort_controllers::JointGroupVelocityController" 
+         base_class_type="controller_interface::ControllerBase">
+    <description>
+      The JointGroupVelocityController generates effort commands for a group of joints and tracks velocities. It expects an EffortJointInterface type of hardware interface.
+    </description>
+  </class>
+
+</library>
