@@ -161,13 +161,13 @@
       - lwr_a4_joint
       - lwr_a5_joint
       - lwr_a6_joint
-    pid_lwr_a1_joint: {p: 250,  i: 1, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a2_joint: {p: 220,  i: 1, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_e1_joint: {p: 150,  i: 1, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a3_joint: {p: 150,  i: 1, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a4_joint: {p: 90,  i: 1, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a5_joint: {p: 40,  i: 1, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a6_joint: {p: 15,  i: 1, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}  
+    pid_lwr_a1_joint: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a2_joint: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_e1_joint: {p: 200,  i: 0, d: 0, i_clamp_min: -10000, i_clamp_max: 10000} #Gazebo: {p: 200,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a3_joint: {p: 400,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 400,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a4_joint: {p: 950,  i: 135, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 950,  i: 135, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a5_joint: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a6_joint: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} 
 
 # HQP Velocity Controller ----------------------------------------
   lwr_velvet_hqp_vel_controller:
@@ -193,13 +193,13 @@
       - lwr_a4_joint
       - lwr_a5_joint
       - lwr_a6_joint
-    pid_lwr_a1_joint: {p: 25000,  i: 10, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a2_joint: {p: 22000,  i: 10, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_e1_joint: {p: 15000,  i: 10, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a3_joint: {p: 15000,  i: 10, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a4_joint: {p: 9000,  i: 10, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a5_joint: {p: 4000,  i: 10, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a6_joint: {p: 1500,  i: 10, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a1_joint: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a2_joint: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_e1_joint: {p: 200,  i: 0, d: 0, i_clamp_min: -10000, i_clamp_max: 10000} #Gazebo: {p: 200,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a3_joint: {p: 400,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 400,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a4_joint: {p: 950,  i: 135, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 950,  i: 135, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a5_joint: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a6_joint: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} 
 
 
 

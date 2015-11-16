@@ -40,6 +40,8 @@
     <!--node name="controller_stopper" pkg="controller_manager" type="spawner" args="-stopped $(arg stopped_controllers)" /-->
   </group>
 
+<node name="lwr_velvet_rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find lwr_velvet_description)/config/lwr_velvet.rviz" output="screen"/>
+
   <!-- Launch RQT for control tuning 
        <node name="lwr_rqt" pkg="rqt_gui" type="rqt_gui" respawn="false"
        output="screen" args="-perspective-file $(find lwr_control)/launch/lwr_forward_pos_control.perspective"/-->

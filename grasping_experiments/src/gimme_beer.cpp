@@ -46,11 +46,11 @@ namespace grasping_experiments
 	      safeShutdown();
 	      return false;
 	    }
-	  if(!setCartesianStiffness(1000, 1000, 1000, 100, 100, 100))
-	    {
-	      safeShutdown();
-	      return false;
-	    }
+	  // if(!setCartesianStiffness(1000, 1000, 1000, 100, 100, 100))
+	  //   {
+	  //     safeShutdown();
+	  //     return false;
+	  //   }
 
 	  if(!setJointConfiguration(sensing_config_))
 	    {
@@ -92,11 +92,11 @@ namespace grasping_experiments
 #if 0
 #endif
 
-	  if(!setCartesianStiffness(1000, 1000, 100, 100, 100, 100))
-	    {
-	      safeShutdown();
-	      return false;
-	    }
+	  // if(!setCartesianStiffness(1000, 1000, 100, 100, 100, 100))
+	  //   {
+	  //     safeShutdown();
+	  //     return false;
+	  //   }
 
 	  if(!setGraspApproach())
 	    {
@@ -123,12 +123,12 @@ namespace grasping_experiments
 
 	if(!with_gazebo_)
 	  {
-	    //SET GRASP STIFFNESS
-	    if(!setCartesianStiffness(1000, 50, 30, 100, 100, 10))
-	      {
-		safeShutdown();
-		return false;
-	      }
+	    // //SET GRASP STIFFNESS
+	    // if(!setCartesianStiffness(1000, 50, 30, 100, 100, 10))
+	    //   {
+	    // 	safeShutdown();
+	    // 	return false;
+	    //   }
 
 	    deactivateHQPControl();
 	    //VELVET GRASP_
@@ -170,11 +170,11 @@ namespace grasping_experiments
 	  safeShutdown();
 	  return false;
 	}
-      if(!setCartesianStiffness(1000, 1000, 1000, 100, 100, 100))
-	{
-	  safeShutdown();
-	  return false;
-	}
+      // if(!setCartesianStiffness(1000, 1000, 1000, 100, 100, 100))
+      // 	{
+      // 	  safeShutdown();
+      // 	  return false;
+      // 	}
       if(!setObjectExtract())
 	{
 	  ROS_ERROR("Could not set the object extract!");
@@ -210,11 +210,11 @@ namespace grasping_experiments
 	  safeShutdown();
 	  return false;
 	}
-      if(!setCartesianStiffness(1000, 1000, 1000, 100, 100, 100))
-	{
-	  safeShutdown();
-	  return false;
-	}
+      // if(!setCartesianStiffness(1000, 1000, 1000, 100, 100, 100))
+      // 	{
+      // 	  safeShutdown();
+      // 	  return false;
+      // 	}
 
       if(!setJointConfiguration(gimme_beer_config_))
 	{
