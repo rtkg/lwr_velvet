@@ -3,11 +3,11 @@
 
   <!-- LAUNCH INTERFACE -->
 
-  <arg name="use_rviz" default="false"/>
+  <arg name="use_rviz" default="true"/>
 
   <arg name="controllers" value="lwr_velvet_hqp_eff_controller" /> 
 
-  <!--arg name="stopped_controllers" default="gravity_compensation_controller one_task_inverse_kinematics"/-->
+  <arg name="stopped_controllers" default="cartesian_impedance_controller"/>
 
   <!-- LAUNCH IMPLEMENTATION -->
 
@@ -23,24 +23,24 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
   <group if="$(arg use_rviz)">
-    <node name="lwr_velvet_rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find lwr_velvet_description)/config/lwr_velvet.rviz" output="screen"/>
+     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find grasping_experiments)/launch/lwr_velvet.rviz"/>
   </group>
 
-  <!-- load robotHW configurations to rosparam server -->
-  <rosparam command="load" file="$(find lwr_velvet_description)/config/hw_interface.yaml"/>
+	<!-- load robotHW configurations to rosparam server -->
+	<rosparam command="load" file="$(find single_lwr_robot)/config/hw_interface.yaml"/>
 
   <!-- load all controller configurations to rosparam server -->
-  <rosparam file="$(find lwr_velvet_description)/config/controllers.yaml" command="load" ns="/lwr"  />
+  <rosparam file="$(find lwr_velvet_description)/config/gazebo_controllers.yaml" command="load" ns="/lwr"  />
   <rosparam file="$(find velvet_fingers_control)/config/velvet_fingers_control.yaml" command="load" ns="/lwr"  />
 
   <!-- Controllers -->
   <group ns="lwr">
     <!-- spawn only desired controllers in current namespace -->
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller $(arg controllers)"/>
-    <!--node name="controller_stopper" pkg="controller_manager" type="spawner" args="-stopped $(arg stopped_controllers)" /-->
+    <node name="controller_stopper" pkg="controller_manager" type="spawner" args="--stopped $(arg stopped_controllers)" />
   </group>
 
-  <!-- launch the grasping_experiments node -->
+  <!-- launch the grasping_experiments node >
   <node name="grasping_experiments" pkg="grasping_experiments" type="grasping_experiments" respawn="false" output="screen" >
      <param name="with_gazebo" type="bool" value="true"/>
      <remap from="/task_status_array" to="/lwr/lwr_velvet_hqp_eff_controller/task_status_array"/>
@@ -52,13 +52,12 @@
      <remap from="/visualize_task_geometries" to="/lwr/lwr_velvet_hqp_eff_controller/visualize_task_geometries"/>
      <remap from="/set_physics_properties" to="/gazebo/set_physics_properties"/>
      <remap from="/joint_states" to="/lwr/joint_states"/>
-  </node>
+     <remap from="/switch_controller" to="/lwr/controller_manager/switch_controller"/>
+  </node!-->
 
  <!--load predifined persistent task descriptions (joint limit avoidance, self-collision avoidance ...) definitions for the HQP controller -->
  <rosparam file="$(find grasping_experiments)/hqp_tasks/task_definitions.yaml" command="load" ns="/lwr"/>
 
-  <!-- Show in Rviz   -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find grasping_experiments)/launch/lwr_velvet.rviz"/>
 
   <!-- Launch RQT for control tuning 
        <node name="lwr_rqt" pkg="rqt_gui" type="rqt_gui" respawn="false"

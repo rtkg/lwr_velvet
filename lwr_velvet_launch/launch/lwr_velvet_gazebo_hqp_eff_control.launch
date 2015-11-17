@@ -30,7 +30,7 @@
   <rosparam command="load" file="$(find lwr_velvet_description)/config/hw_interface.yaml"/>
 
   <!-- load all controller configurations to rosparam server -->
-  <rosparam file="$(find lwr_velvet_description)/config/controllers.yaml" command="load" ns="/lwr"  />
+  <rosparam file="$(find lwr_velvet_description)/config/gazebo_controllers.yaml" command="load" ns="/lwr"  />
   <rosparam file="$(find velvet_fingers_control)/config/velvet_fingers_control.yaml" command="load" ns="/lwr"  />
 
   <!-- Controllers -->

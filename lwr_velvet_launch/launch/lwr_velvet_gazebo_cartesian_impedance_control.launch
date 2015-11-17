@@ -5,9 +5,9 @@
 
   <arg name="use_rviz" default="false"/>
 
-  <arg name="controllers" value="lwr_velvet_joint_group_vel_eff_controller" /> 
+  <arg name="controllers" value="cartesian_impedance_controller" /> 
 
-  <!--arg name="stopped_controllers" default="gravity_compensation_controller one_task_inverse_kinematics"/-->
+  <arg name="stopped_controllers" default="lwr_velvet_hqp_eff_controller"/>
 
   <!-- LAUNCH IMPLEMENTATION -->
 
@@ -30,15 +30,17 @@
   <rosparam command="load" file="$(find lwr_velvet_description)/config/hw_interface.yaml"/>
 
   <!-- load all controller configurations to rosparam server -->
-  <rosparam file="$(find lwr_velvet_description)/config/controllers.yaml" command="load" ns="/lwr"  />
+  <rosparam file="$(find lwr_velvet_description)/config/gazebo_controllers.yaml" command="load" ns="/lwr"  />
   <rosparam file="$(find velvet_fingers_control)/config/velvet_fingers_control.yaml" command="load" ns="/lwr"  />
 
   <!-- Controllers -->
   <group ns="lwr">
     <!-- spawn only desired controllers in current namespace -->
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller $(arg controllers)"/>
-    <!--node name="controller_stopper" pkg="controller_manager" type="spawner" args="-stopped $(arg stopped_controllers)" /-->
+    <node name="controller_stopper" pkg="controller_manager" type="spawner" args="--stopped $(arg stopped_controllers)" />
   </group>
+
+<node name="lwr_velvet_rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find lwr_velvet_description)/config/lwr_velvet.rviz" output="screen"/>
 
   <!-- Launch RQT for control tuning 
        <node name="lwr_rqt" pkg="rqt_gui" type="rqt_gui" respawn="false"

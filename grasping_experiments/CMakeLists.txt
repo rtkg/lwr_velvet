@@ -52,6 +52,7 @@ catkin_package(
      CATKIN_DEPENDS
      roscpp
      hqp_controllers_msgs
+     controller_manager_msgs
      gazebo_msgs
      velvet_interface_node
      INCLUDE_DIRS include ${EIGEN_INCLUDE_DIRS}

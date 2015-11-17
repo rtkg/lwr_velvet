@@ -198,13 +198,13 @@
       - lwr_a4_joint
       - lwr_a5_joint
       - lwr_a6_joint
-    pid_lwr_a1_joint: {p: 0,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a2_joint: {p: 0,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_e1_joint: {p: 0,  i: 0, d: 0, i_clamp_min: -10000, i_clamp_max: 10000} #Gazebo: {p: 200,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a3_joint: {p: 0,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 400,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a4_joint: {p: 0,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 950,  i: 135, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a5_joint: {p: 0,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
-    pid_lwr_a6_joint: {p: 0,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} 
+    pid_lwr_a1_joint: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a2_joint: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 500,  i: 5, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_e1_joint: {p: 200,  i: 0, d: 0, i_clamp_min: -10000, i_clamp_max: 10000} #Gazebo: {p: 200,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a3_joint: {p: 400,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 400,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a4_joint: {p: 950,  i: 135, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 950,  i: 135, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a5_joint: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000}
+    pid_lwr_a6_joint: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} #Gazebo: {p: 40,  i: 0, d: 0, i_clamp_min: -1000, i_clamp_max: 1000} 
 
 
 

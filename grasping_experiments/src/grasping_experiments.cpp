@@ -47,6 +47,7 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     load_tasks_clt_ = n_.serviceClient<hqp_controllers_msgs::LoadTasks>("load_tasks");
     reset_hqp_control_clt_ = n_.serviceClient<std_srvs::Empty>("reset_hqp_control");
 
+    switch_controller_clt_ = n_.serviceClient<controller_manager_msgs::SwitchController>("switch_controller");
     if(!with_gazebo_)
     {
         get_grasp_interval_clt_ = n_.serviceClient<hqp_controllers_msgs::FindCanTask>("get_grasp_interval");

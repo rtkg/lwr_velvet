@@ -13,6 +13,7 @@
 #include <velvet_interface_node/VelvetToPos.h>
 #include <lbr_fri/SetStiffness.h>
 #include <sensor_msgs/JointState.h>
+#include <controller_manager_msgs/SwitchController.h>
 
 namespace grasping_experiments
 {
@@ -21,7 +22,7 @@ namespace grasping_experiments
 
 #define PILE_GRASPING 1
 
-#define DYNAMICS_GAIN  -0.5
+#define DYNAMICS_GAIN  -0.8
 #define ALIGNMENT_ANGLE  0.05
 
 #define SAFETY_HEIGHT 0.34
@@ -120,6 +121,8 @@ namespace grasping_experiments
     ros::ServiceServer gimme_beer_srv_;
     ros::ServiceServer lets_dance_srv_;
     ros::ServiceServer look_what_i_found_srv_;
+
+    ros::ServiceClient switch_controller_clt_;
 
     //** Manipulator joint configuration while moving the forklift */
     std::vector<double> transfer_config_;
