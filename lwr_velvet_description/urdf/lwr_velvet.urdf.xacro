@@ -11,6 +11,7 @@
   <xacro:include filename="$(find lwr_description)/model/kuka_lwr.urdf.xacro"/>
   <xacro:include filename="$(find velvet_fingers_description)/urdf/velvet_fingers.xacro"/>
 
+
   <link name="world" />
   
   <!-- BODY -->

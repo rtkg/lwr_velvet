@@ -2,18 +2,16 @@
 <launch>
 
   <!-- LAUNCH INTERFACE -->
+ <arg name="use_rviz" default="true"/>
 
-  <arg name="use_rviz" default="true"/>
-
-  <arg name="controllers" value="lwr_velvet_hqp_eff_controller" /> 
-
+  <arg name="controllers" default="lwr_velvet_hqp_vel_controller"/>
   <arg name="stopped_controllers" default="cartesian_impedance_controller"/>
 
   <!-- LAUNCH IMPLEMENTATION -->
 
   <!--Load the URDF and launch Gazebo-->
   <include file="$(find lwr_velvet_gazebo)/launch/lwr_velvet_world.launch">
-    <arg name="velvet_hardware_interface" value="EffortJointInterface" />
+    <arg name="velvet_hardware_interface" value="VelocityJointInterface" />
   </include>
 
   <!-- joint and robot state publishers of the full robot description -->
@@ -37,7 +35,7 @@
   <group ns="lwr">
     <!-- spawn only desired controllers in current namespace -->
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller $(arg controllers)"/>
-    <node name="controller_stopper" pkg="controller_manager" type="spawner" args="--stopped $(arg stopped_controllers)" />
+    <!--node name="controller_stopper" pkg="controller_manager" type="spawner" args="-stopped $(arg stopped_controllers)" /-->
   </group>
 
   <!-- launch the grasping_experiments node >

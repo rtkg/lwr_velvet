@@ -8,8 +8,8 @@
   <arg name="ip" default="192.168.0.10"/>
   <arg name="file" default="$(find single_lwr_robot)/config/980241-FRI-Driver.init"/>
 
-  <arg name="controllers" default="one_task_inverse_dynamics_JL"/>
-  <arg name="stopped_controllers" default="cartesian_impedance_conroller"/>
+  <arg name="controllers" default="joint_trajectory_controller"/>
+  <arg name="stopped_controllers" default="lwr_velvet_hqp_eff_controller"/>
 
   <!-- set some ros tools -->
   <arg name="use_rviz" default="true"/>
@@ -55,7 +55,7 @@
 
     <!-- spawn only desired controllers in current namespace -->
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller $(arg controllers)"/>
-    <!--node name="controller_stopper" pkg="controller_manager" type="spawner" args="-stopped $(arg stopped_controllers)" /-->
+    <node name="controller_stopper" pkg="controller_manager" type="spawner" args="--stopped $(arg stopped_controllers)" />
   </group>
 
   <!-- launch the grasping_experiments node >
@@ -75,5 +75,7 @@
 
  <!--load predifined persistent task descriptions (joint limit avoidance, self-collision avoidance ...) definitions for the HQP controller -->
  <rosparam file="$(find grasping_experiments)/hqp_tasks/task_definitions.yaml" command="load" ns="/lwr"/>
+
+      <node name="lwr_rqt" pkg="rqt_gui" type="rqt_gui" respawn="false" output="screen" />
 
 </launch>
