@@ -11,7 +11,7 @@
 
   <!--Load the URDF and launch Gazebo-->
   <include file="$(find lwr_velvet_gazebo)/launch/lwr_velvet_world.launch">
-    <arg name="velvet_hardware_interface" value="VelocityJointInterface" />
+    <arg name="hardware_interface" value="VelocityJointInterface" />
   </include>
 
   <!-- joint and robot state publishers of the full robot description -->
@@ -24,8 +24,6 @@
      <node name="rviz" pkg="rviz" type="rviz" args="-d $(find grasping_experiments)/launch/lwr_velvet.rviz"/>
   </group>
 
-	<!-- load robotHW configurations to rosparam server -->
-	<rosparam command="load" file="$(find single_lwr_robot)/config/hw_interface.yaml"/>
 
   <!-- load all controller configurations to rosparam server -->
   <rosparam file="$(find lwr_velvet_description)/config/gazebo_controllers.yaml" command="load" ns="/lwr"  />

@@ -15,12 +15,12 @@
   <arg name="use_rviz" default="true"/>
 
   <!-- hardware interface for the Velvet gripper -->
-  <arg name="velvet_hardware_interface" value="EffortJointInterface" />
+  <arg name="hardware_interface" value="EffortJointInterface" />
 
   <!-- LAUNCH IMPLEMENTATION -->
 
   <!-- the urdf/sdf parameter -->
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find lwr_velvet_description)/urdf/lwr_velvet.urdf.xacro' prefix:=$(arg velvet_hardware_interface)" />	
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find lwr_velvet_description)/urdf/lwr_velvet.urdf.xacro' prefix:=$(arg hardware_interface)" />	
 
   <!-- joint and robot state publishers of the full robot description -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">

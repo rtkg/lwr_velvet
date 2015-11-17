@@ -13,7 +13,7 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <run_depend>velvet_fingers_description</run_depend>
-  <run_depend>lwr_description</run_depend>
+  <run_depend>oru_lwr_description</run_depend>
 
   <export>
   </export>

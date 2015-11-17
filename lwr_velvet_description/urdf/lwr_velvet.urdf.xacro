@@ -8,7 +8,7 @@
   <xacro:include filename="$(find lwr_velvet_description)/urdf/torso.urdf.xacro"/>
   <xacro:include filename="$(find lwr_velvet_description)/urdf/table.urdf.xacro"/>
   <xacro:include filename="$(find lwr_velvet_description)/urdf/materials.xacro"/>
-  <xacro:include filename="$(find lwr_description)/model/kuka_lwr.urdf.xacro"/>
+  <xacro:include filename="$(find oru_lwr_description)/model/kuka_lwr.urdf.xacro"/>
   <xacro:include filename="$(find velvet_fingers_description)/urdf/velvet_fingers.xacro"/>
 
 
@@ -50,7 +50,7 @@
   </xacro:soft_hand-->
 
   <!-- RIGHT ARM -->
-  <xacro:kuka_lwr name="lwr" parent="world">
+  <xacro:kuka_lwr name="lwr" parent="world" hardware_interface="$(arg prefix)">
     <origin xyz="-0.165 0.10858 1.3" rpy="-1.5707963267948966 0.5235987010713441 0.5235990737060282"/>
   </xacro:kuka_lwr>
 
