@@ -5,6 +5,24 @@ namespace grasping_experiments
   //----------------------------------------------------------------------------------
   bool GraspingExperiments::gimmeBeer(std_srvs::Empty::Request  &req, std_srvs::Empty::Response &res )
   {
+
+    //SWITCH TO VELOCITY CONTROL
+    controller_manager_msgs::SwitchController switch_msg;
+    switch_msg.request.start_controllers.push_back("lwr_velvet_hqp_vel_controller");
+    switch_msg.request.stop_controllers.push_back("joint_trajectory_controller");
+    switch_msg.request.strictness=2;   
+    switch_msg.response.ok=false;
+
+    ROS_INFO("Switching to hqp velocity control.");
+    deactivateHQPControl();
+    switch_controller_clt_.call(switch_msg);
+    if(!switch_msg.response.ok)
+      {
+	ROS_ERROR("Could not switch to the hqp velocity controller!");
+	safeShutdown();
+	return false;
+      }
+
     std_srvs::Empty srv;
     deactivateHQPControl();
     resetState();
@@ -118,16 +136,15 @@ namespace grasping_experiments
     }
 
     //SWITCH TO CARTESIAN IMPEDANCE CONTROL
-    controller_manager_msgs::SwitchController msg;
-    msg.request.start_controllers.push_back("cartesian_impedance_controller");
-    msg.request.stop_controllers.push_back("lwr_velvet_hqp_eff_controller");
-    msg.request.strictness=2;   
-    msg.response.ok=false;
+     switch_msg.request.start_controllers[0]="cartesian_impedance_controller";
+    switch_msg.request.stop_controllers[0]="lwr_velvet_hqp_eff_controller";
+    switch_msg.request.strictness=2;   
+    switch_msg.response.ok=false;
 
     ROS_INFO("Switching to cartesian impedance control.");
     deactivateHQPControl();
-    switch_controller_clt_.call(msg);
-    if(!msg.response.ok)
+    switch_controller_clt_.call(switch_msg);
+    if(!switch_msg.response.ok)
       {
 	ROS_ERROR("Could not switch to the cartesian impedance controller!");
 	safeShutdown();
@@ -163,12 +180,11 @@ namespace grasping_experiments
 
       }
 
-
     //SWITCH TO HQP CONTROL
-    msg.request.start_controllers[0]=("lwr_velvet_hqp_eff_controller");
-    msg.request.stop_controllers[0]=("cartesian_impedance_controller");
-    msg.response.ok=false;
-    if(!msg.response.ok)
+    switch_msg.request.start_controllers[0]=("lwr_velvet_hqp_vel_controller");
+    switch_msg.request.stop_controllers[0]=("cartesian_impedance_controller");
+    switch_msg.response.ok=false;
+    if(!switch_msg.response.ok)
       {
 	ROS_ERROR("Could not switch to the hqp controller!");
 	safeShutdown();

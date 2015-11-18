@@ -66,7 +66,6 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     {
         //if gazebo is used, set the simulated gravity to zero in order to prevent gazebo's joint drifting glitch
         set_gazebo_physics_clt_.waitForExistence();
-
         gazebo_msgs::SetPhysicsProperties properties;
         properties.request.time_step = 0.001;
         properties.request.max_update_rate = 1000;
