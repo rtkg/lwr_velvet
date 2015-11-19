@@ -15,7 +15,7 @@
   <arg name="stopped_controllers" default="lwr_velvet_hqp_vel_controller cartesian_impedance_controller"/>
 
   <!-- set some ros tools -->
-  <arg name="use_rviz" default="true"/>
+  <arg name="use_rviz" default="false"/>
 
   <!-- hardware interface for the Velvet gripper -->
   <arg name="hardware_interface" value="VelocityJointInterface" />

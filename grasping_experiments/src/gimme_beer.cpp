@@ -163,6 +163,8 @@ namespace grasping_experiments
 
 	ROS_INFO("Switching to cartesian impedance control.");
 	deactivateHQPControl();
+	sleep(60);
+/*
 	switch_controller_clt_.call(switch_msg);
 	if(!switch_msg.response.ok)
 	  {
@@ -171,15 +173,15 @@ namespace grasping_experiments
 	    return false;
 	  }
 
-
+*/
 	//VELVET GRASP_
 	velvet_interface_node::SmartGrasp graspcall;
-	graspcall.request.current_threshold_contact = 20;
-	graspcall.request.current_threshold_final = 35;
-	graspcall.request.max_belt_travel_mm = 90;
+	graspcall.request.current_threshold_contact = 30;
+	graspcall.request.current_threshold_final = 45;
+	graspcall.request.max_belt_travel_mm = -160;
 	graspcall.request.phalange_delta_rad = 0.02;
 	graspcall.request.gripper_closed_thresh = 1.5;
-	graspcall.request.check_phalanges = true;
+	graspcall.request.check_phalanges = false;
 
 	if(!velvet_grasp_clt_.call(graspcall)) {
 	  ROS_ERROR("could not call grasping");
@@ -230,7 +232,7 @@ namespace grasping_experiments
 	  return false;
 	}
 
-      task_error_tol_ = 5 * 1e-3;
+      task_error_tol_ = 0.2 * 1e-2;
       activateHQPControl();
 
       while(!task_status_changed_)
@@ -285,6 +287,7 @@ namespace grasping_experiments
       ROS_INFO("Manipulator gimme beer configuration tasks executed successfully.");
     }
 
+#if 0
     if(!with_gazebo_)
       {
 	velvet_interface_node::VelvetToPos poscall2;
@@ -296,7 +299,7 @@ namespace grasping_experiments
 	    ROS_BREAK();
 	  }
       }
-
+#endif
 
     deactivateHQPControl();
     resetState();
@@ -325,7 +328,7 @@ namespace grasping_experiments
 #if 0
 #endif
     ROS_INFO("GIMME BEER FINISHED.");
-    exp_outcome_srv_ = nh_.advertiseService("experiment_outcome", &GraspingExperiments::expOutcome, this);
+
     bag_.close();
 
     return true;
@@ -339,6 +342,7 @@ namespace grasping_experiments
 
     bag_.write("experiment_outcome",ros::Time::now(),outcome);
     bag_.close();
+    return true;
 }
   //---------------------------------------------------------------------------------------------------
 } //end namespace

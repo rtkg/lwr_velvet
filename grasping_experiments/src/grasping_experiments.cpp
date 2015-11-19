@@ -45,6 +45,7 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     start_demo_srv_ = nh_.advertiseService("start_demo", &GraspingExperiments::startDemo, this);
     gimme_beer_srv_ = nh_.advertiseService("gimme_beer", &GraspingExperiments::gimmeBeer, this);
     lets_dance_srv_ = nh_.advertiseService("lets_dance", &GraspingExperiments::letsDance, this);
+    exp_outcome_srv_ = nh_.advertiseService("experiment_outcome", &GraspingExperiments::expOutcome, this);
     look_what_i_found_srv_ = nh_.advertiseService("look_what_i_found", &GraspingExperiments::lookWhatIFound, this);
     task_status_sub_ = n_.subscribe("task_status_array", 1, &GraspingExperiments::taskStatusCallback, this);
     joint_state_sub_ = n_.subscribe("joint_states", 1, &GraspingExperiments::jointStateCallback, this);
@@ -1104,7 +1105,7 @@ bool GraspingExperiments::setObjectExtract()
     task.ds = 0.0;
     task.di = 1;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
-    task.dynamics.d_data.push_back(DYNAMICS_GAIN * 1);
+    task.dynamics.d_data.push_back(DYNAMICS_GAIN * 0.5);
 
     t_link.geometries.clear();
     t_geom.g_data.clear();
