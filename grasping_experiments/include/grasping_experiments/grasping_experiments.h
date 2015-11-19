@@ -133,6 +133,8 @@ namespace grasping_experiments
     ros::ServiceServer start_demo_srv_;
     ros::ServiceServer exp_outcome_srv_;
     ros::ServiceServer gimme_beer_srv_;
+    ros::ServiceServer approach_beer_srv_;
+    ros::ServiceServer extract_beer_srv_;
     ros::ServiceServer lets_dance_srv_;
     ros::ServiceServer look_what_i_found_srv_;
 
@@ -189,6 +191,8 @@ namespace grasping_experiments
     bool startDemo(std_srvs::Empty::Request  &req,std_srvs::Empty::Response &res );
     bool expOutcome(hqp_controllers_msgs::ActivateHQPControl::Request & req, hqp_controllers_msgs::ActivateHQPControl::Response &res);
     bool gimmeBeer(std_srvs::Empty::Request  &req,std_srvs::Empty::Response &res );
+    bool approachBeer(std_srvs::Empty::Request  &req,std_srvs::Empty::Response &res );
+    bool extractBeer(std_srvs::Empty::Request  &req,std_srvs::Empty::Response &res );
     bool letsDance(std_srvs::Empty::Request  &req,std_srvs::Empty::Response &res );
     bool lookWhatIFound(std_srvs::Empty::Request  &req,std_srvs::Empty::Response &res );
   };
