@@ -28,6 +28,15 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     if(with_gazebo_)
         ROS_INFO("Grasping experiments running in Gazebo.");
 
+
+    if(!nh_.getParam("bag_path", bag_path_))
+      ROS_WARN("Could not find bag path on the parameter server!");
+
+
+    write_jnts_=false;
+    write_tf_=false;
+    write_cluster_=false;
+
     //initialize variables
     task_status_changed_ = false;
     task_success_ = false;
@@ -39,6 +48,8 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     look_what_i_found_srv_ = nh_.advertiseService("look_what_i_found", &GraspingExperiments::lookWhatIFound, this);
     task_status_sub_ = n_.subscribe("task_status_array", 1, &GraspingExperiments::taskStatusCallback, this);
     joint_state_sub_ = n_.subscribe("joint_states", 1, &GraspingExperiments::jointStateCallback, this);
+    cluster_sub_ = n_.subscribe("result_cloud", 1, &GraspingExperiments::clusterCallback, this);
+    tf_sub_ = n_.subscribe("tf", 1, &GraspingExperiments::tfCallback, this);
     set_tasks_clt_ = n_.serviceClient<hqp_controllers_msgs::SetTasks>("set_tasks");
     remove_tasks_clt_ = n_.serviceClient<hqp_controllers_msgs::RemoveTasks>("remove_tasks");
     activate_hqp_control_clt_ = n_.serviceClient<hqp_controllers_msgs::ActivateHQPControl>("activate_hqp_control");
@@ -121,25 +132,25 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
 #endif
 
     sensing_config_ = std::vector<double>(n_jnts);
-    sensing_config_[0] = 2.26;
-    sensing_config_[1] = 1.6;
-    sensing_config_[2] = 0.09;
-    sensing_config_[3] = 1.69;
-    sensing_config_[4] = -0.09;
-    sensing_config_[5] = -1.69;
-    sensing_config_[6] = -1.47;
+    sensing_config_[0] = 2.13;
+    sensing_config_[1] = 0.93;
+    sensing_config_[2] = 0.43;
+    sensing_config_[3] = 1.41;
+    sensing_config_[4] = -0.34;
+    sensing_config_[5] = -1.8;
+    sensing_config_[6] = -1.55;
 #ifdef HQP_GRIPPER_JOINT
     sensing_config_[7] = 0.1;
 #endif
 
     gimme_beer_config_ = std::vector<double>(n_jnts);
-    gimme_beer_config_[0] = 2.26;
-    gimme_beer_config_[1] = 1.6;
-    gimme_beer_config_[2] = 0.09;
-    gimme_beer_config_[3] = 1.69;
-    gimme_beer_config_[4] = -0.09;
-    gimme_beer_config_[5] = -1.69;
-    gimme_beer_config_[6] = -1.47;
+    gimme_beer_config_[0] = 2.13;
+    gimme_beer_config_[1] = 0.93;
+    gimme_beer_config_[2] = 0.43;
+    gimme_beer_config_[3] = 1.41;
+    gimme_beer_config_[4] = -0.34;
+    gimme_beer_config_[5] = -1.8;
+    gimme_beer_config_[6] = -1.55;
 #ifdef HQP_GRIPPER_JOINT
     gimme_beer_config_[7] = 0.1;
 #endif
@@ -1828,134 +1839,44 @@ void GraspingExperiments::taskStatusCallback( const hqp_controllers_msgs::TaskSt
 
 }
 //-----------------------------------------------------------------
-void GraspingExperiments::jointStateCallback( const sensor_msgs::JointStatePtr& msg)
-{
+  void GraspingExperiments::jointStateCallback( const sensor_msgs::JointStatePtr& msg)
+  {
     boost::mutex::scoped_lock lock(force_change_m_, boost::try_to_lock);
     if(!lock) return;
 
-    static sensor_msgs::JointState prev_state = *msg;
-
-
-
-    //    static struct timeval t_stag;
-    //    struct timeval t;
-    //    gettimeofday(&t,0);
-    //    static bool stagnation_flag = false;
-
-    //    if(!stagnation_flag)
-    //        t_stag = t;
-
-    //    stagnation_flag = false;
-    //    // double curr = t.tv_sec + 0.000001*t.tv_usec;
-    //    // double stag = t_stag.tv_sec + 0.000001*t_stag.tv_usec;
-
-    //    // std::cerr<<"t: "<<curr<<std::endl;
-    //    // std::cerr<<"t_stag: "<<stag<<std::endl;
-
-    //    // std::cerr<<"monitored tasks: ";
-    //    // for(unsigned int i=0; i<monitored_tasks_.size(); i++)
-    //    //   std::cerr<<monitored_tasks_[i]<<" ";
-
-    //    // std::cerr<<std::endl;
-    //    // std::cerr<<"received tasks: ";
-    //    // std::vector<hqp_controllers_msgs::TaskStatus>::const_iterator status_it2;
-    //    // for(status_it2 = msg->statuses.begin(); status_it2!=msg->statuses.end(); ++status_it2)
-    //    // 	std::cerr<<status_it2->id<<" "<<status_it2->name<<" "<<std::endl;
-
-    //    // std::cerr<<std::endl;
-
-    //    Eigen::VectorXd t_prog(monitored_tasks_.size());
-
-    //    //form the maximum norm over all errors
-
-    //    for(unsigned int i=0; i<monitored_tasks_.size(); i++)
-    //    {
-    //        //try to find the monitored task id in the given task status message
-    //        std::vector<hqp_controllers_msgs::TaskStatus>::const_iterator status_it;
-    //        for(status_it = msg->statuses.begin(); status_it!=msg->statuses.end(); ++status_it)
-    //            if(monitored_tasks_[i] == status_it->id)
-    //            {
-    //                t_prog(i)=status_it->progress;
-    //                break;
-    //            }
-
-    //        if(status_it==msg->statuses.end())
-    //        {
-    //            ROS_WARN("No status feedback for monitored task id %d!", monitored_tasks_[i]);
-    //            return; //just so we don't give a false positive task success
-    //        }
-
-    //    }
-
-    //    double e = 0.0;
-    //    double e_diff = INFINITY;
-
-
-    //    if(monitored_tasks_.size() > 0)
-    //    {
-    //        //task error
-    //        e = t_prog.cwiseAbs().maxCoeff();
-
-    //        //find the task progress difference between iterations
-    //        if(t_prog_prev_.size() > 0)
-    //            e_diff = (t_prog - t_prog_prev_).cwiseAbs().maxCoeff();
-
-    //        //std::cerr<<"t_prog: "<<t_prog.transpose()<<"e: "<<e<<std::endl;
-    //        //std::cerr<<"t_prog_prev_: "<<t_prog_prev_.transpose()<<"e_diff: "<<e_diff<<std::endl;
-    //        t_prog_prev_ = t_prog;
-    //    }
-    //    //  std::cout<<" t - t_stag: "<<t.tv_sec - t_stag.tv_sec + 0.000001 * (t.tv_usec - t_stag.tv_usec)<<" task_timeout_tol_: "<<task_timeout_tol_<<std::endl;
-    //    //std::cout<<"e_diff: "<<e_diff<<" e_diff_tol_: "<<task_diff_tol_<<std::endl;
-
-    //    if(e <= task_error_tol_)
-    //    {
-    //        std::cerr<<std::endl<<"STATE CHANGE:"<<std::endl<<"monitored tasks: ";
-    //        for(unsigned int i=0; i<monitored_tasks_.size(); i++)
-    //            std::cerr<<monitored_tasks_[i]<<" ";
-
-    //        std::cerr<<std::endl<<"task statuses: "<<std::endl;
-    //        for( std::vector<hqp_controllers_msgs::TaskStatus>::iterator it = msg->statuses.begin(); it!=msg->statuses.end(); ++it)
-    //            std::cerr<<"id: "<<it->id<<" name: "<<it->name<<" progress: "<<it->progress<<std::endl;
-
-    //        std::cerr<<"e: "<<e<<std::endl<<std::endl;
-
-    //        // ROS_INFO("Task status switch!");
-    //        task_status_changed_ = true;
-    //        task_success_ = true;
-    //        cond_.notify_one();
-    //    }
-    //    else if(e_diff <= task_diff_tol_) //(task progresses ain't changing no more)
-    //    {
-    //        stagnation_flag = true;
-    //        std::cerr<<"task progress stagnating since:"<<t.tv_sec - t_stag.tv_sec + 0.000001 * (t.tv_usec - t_stag.tv_usec)<<" s, e_diff is: "<<e_diff<<std::endl;
-    //        if((t.tv_sec - t_stag.tv_sec + 0.000001 * (t.tv_usec - t_stag.tv_usec)) > task_timeout_tol_ )
-    //        {
-    //            task_status_changed_ = true;
-    //            task_success_ = true;
-    //            ROS_WARN("Task execution timeout!");
-    //            std::cerr<<"monitored tasks: ";
-    //            for(unsigned int i=0; i<monitored_tasks_.size(); i++)
-    //                std::cerr<<monitored_tasks_[i]<<" ";
-
-    //            std::cerr<<std::endl<<"task statuses: "<<std::endl;
-    //            for( std::vector<hqp_controllers_msgs::TaskStatus>::iterator it = msg->statuses.begin(); it!=msg->statuses.end(); ++it)
-    //                std::cerr<<"id: "<<it->id<<" name: "<<it->name<<" progress: "<<it->progress<<std::endl;
-
-    //            std::cerr<<"e: "<<e<<std::endl<<std::endl;
-    //            //std::cerr<<"t: "<<"t - t_stag: "<<t.tv_sec - t_stag.tv_sec + 0.000001 * (t.tv_usec - t_stag.tv_usec)<<" task_timeout_tol_: "<<task_timeout_tol_<<std::endl;
-    //            //std::cerr<<"e_diff: "<<e_diff<<" e_diff_tol_: "<<task_diff_tol_<<std::endl<<std::endl;
-
-    //            stagnation_flag = false;
-    //            cond_.notify_one();
-    //        }
-    //    }
-
-    prev_state = *msg;
-
-}
+    if(write_jnts_)
+	bag_.write("joint_states", ros::Time::now(), *msg);
+                  
+  }
 //-----------------------------------------------------------------
-bool GraspingExperiments::loadPersistentTasks()
-{
+  void GraspingExperiments::tfCallback( const tf2_msgs::TFMessagePtr& msg)
+  {
+    boost::mutex::scoped_lock lock(force_change_m_, boost::try_to_lock);
+    if(!lock) return;
+
+    if(write_tf_)
+	bag_.write("tf", ros::Time::now(), *msg);
+
+    //one-shot writing
+    write_tf_ =false;
+                  
+  }
+//-----------------------------------------------------------------
+  void GraspingExperiments::clusterCallback( const sensor_msgs::PointCloud2Ptr& msg)
+  {
+    boost::mutex::scoped_lock lock(force_change_m_, boost::try_to_lock);
+    if(!lock) return;
+
+    if(write_cluster_)
+	bag_.write("result_cloud", ros::Time::now(), *msg);
+
+    //one-shot writing
+    write_cluster_ =false;
+                  
+  }
+  //-----------------------------------------------------------------
+  bool GraspingExperiments::loadPersistentTasks()
+  {
     hqp_controllers_msgs::LoadTasks persistent_tasks;
     persistent_tasks.request.task_definitions = "task_definitions";
     if(!load_tasks_clt_.call(persistent_tasks))

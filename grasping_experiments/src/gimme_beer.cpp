@@ -1,26 +1,34 @@
 #include <grasping_experiments/grasping_experiments.h>
+#include <std_msgs/Bool.h>
 
 namespace grasping_experiments
 {
   //----------------------------------------------------------------------------------
   bool GraspingExperiments::gimmeBeer(std_srvs::Empty::Request  &req, std_srvs::Empty::Response &res )
   {
+    ros::Time now=ros::Time::now();
+    bag_name_ = bag_path_+"/"+boost::lexical_cast<std::string>(now.toSec())+".bag";
 
-    //SWITCH TO VELOCITY CONTROL
+    bag_.open(bag_name_, rosbag::bagmode::Write);
     controller_manager_msgs::SwitchController switch_msg;
-    switch_msg.request.start_controllers.push_back("lwr_velvet_hqp_vel_controller");
-    switch_msg.request.stop_controllers.push_back("joint_trajectory_controller");
-    switch_msg.request.strictness=2;   
-    switch_msg.response.ok=false;
 
-    ROS_INFO("Switching to hqp velocity control.");
-    deactivateHQPControl();
-    switch_controller_clt_.call(switch_msg);
-    if(!switch_msg.response.ok)
+    if(!with_gazebo_)
       {
-	ROS_ERROR("Could not switch to the hqp velocity controller!");
-	safeShutdown();
-	return false;
+	//SWITCH TO VELOCITY CONTROL
+	switch_msg.request.start_controllers.push_back("lwr_velvet_hqp_vel_controller");
+	switch_msg.request.stop_controllers.push_back("joint_trajectory_controller");
+	switch_msg.request.strictness=2;   
+	switch_msg.response.ok=false;
+
+	ROS_INFO("Switching to hqp velocity control.");
+	deactivateHQPControl();
+	switch_controller_clt_.call(switch_msg);
+	if(!switch_msg.response.ok)
+	  {
+	    ROS_ERROR("Could not switch to the hqp velocity controller!");
+	    safeShutdown();
+	    return false;
+	  }
       }
 
     std_srvs::Empty srv;
@@ -89,6 +97,7 @@ namespace grasping_experiments
     }
 
     {//GRASP APPROACH
+      write_jnts_=true;
       ROS_INFO("Trying grasp approach.");
       boost::mutex::scoped_lock lock(manipulator_tasks_m_);
       task_status_changed_ = false;
@@ -102,8 +111,12 @@ namespace grasping_experiments
 	}
 
       if(!with_gazebo_)
-	if(!getGraspInterval())
-	  ROS_WARN("Could not obtain the grasp intervall - using default interval!");
+	{
+	  write_cluster_;
+	  if(!getGraspInterval())
+	    ROS_WARN("Could not obtain the grasp intervall - using default interval!");
+
+	}
 #if 0
 #endif
 
@@ -133,32 +146,28 @@ namespace grasping_experiments
 	}
 
       ROS_INFO("Grasp approach tasks executed successfully.");
+      write_jnts_=false;
+      write_tf_=true;
     }
-
-    //SWITCH TO CARTESIAN IMPEDANCE CONTROL
-     switch_msg.request.start_controllers[0]="cartesian_impedance_controller";
-    switch_msg.request.stop_controllers[0]="lwr_velvet_hqp_eff_controller";
-    switch_msg.request.strictness=2;   
-    switch_msg.response.ok=false;
-
-    ROS_INFO("Switching to cartesian impedance control.");
-    deactivateHQPControl();
-    switch_controller_clt_.call(switch_msg);
-    if(!switch_msg.response.ok)
-      {
-	ROS_ERROR("Could not switch to the cartesian impedance controller!");
-	safeShutdown();
-	return false;
-      }
 
     if(!with_gazebo_)
       {
-	// //SET GRASP STIFFNESS
-	// if(!setCartesianStiffness(1000, 50, 30, 100, 100, 10))
-	//   {
-	// 	safeShutdown();
-	// 	return false;
-	//   }
+	//SWITCH TO CARTESIAN IMPEDANCE CONTROL
+	switch_msg.request.start_controllers[0]="cartesian_impedance_controller";
+	switch_msg.request.stop_controllers[0]="lwr_velvet_hqp_eff_controller";
+	switch_msg.request.strictness=2;   
+	switch_msg.response.ok=false;
+
+	ROS_INFO("Switching to cartesian impedance control.");
+	deactivateHQPControl();
+	switch_controller_clt_.call(switch_msg);
+	if(!switch_msg.response.ok)
+	  {
+	    ROS_ERROR("Could not switch to the cartesian impedance controller!");
+	    safeShutdown();
+	    return false;
+	  }
+
 
 	//VELVET GRASP_
 	velvet_interface_node::SmartGrasp graspcall;
@@ -178,18 +187,18 @@ namespace grasping_experiments
 	else
 	  ROS_INFO("Grasp aquired.");
 
+	//SWITCH TO HQP CONTROL
+	switch_msg.request.start_controllers[0]=("lwr_velvet_hqp_vel_controller");
+	switch_msg.request.stop_controllers[0]=("cartesian_impedance_controller");
+	switch_msg.response.ok=false;
+	if(!switch_msg.response.ok)
+	  {
+	    ROS_ERROR("Could not switch to the hqp controller!");
+	    safeShutdown();
+	    return false;
+	  }
       }
 
-    //SWITCH TO HQP CONTROL
-    switch_msg.request.start_controllers[0]=("lwr_velvet_hqp_vel_controller");
-    switch_msg.request.stop_controllers[0]=("cartesian_impedance_controller");
-    switch_msg.response.ok=false;
-    if(!switch_msg.response.ok)
-      {
-	ROS_ERROR("Could not switch to the hqp controller!");
-	safeShutdown();
-	return false;
-      }
 
     {//OBJECT EXTRACT
       ROS_INFO("Trying object extract.");
@@ -291,8 +300,20 @@ namespace grasping_experiments
 #if 0
 #endif
     ROS_INFO("GIMME BEER FINISHED.");
+    exp_outcome_srv_ = nh_.advertiseService("experiment_outcome", &GraspingExperiments::expOutcome, this);
+    bag_.close();
 
     return true;
   }
+  //---------------------------------------------------------------------------------------------------
+    bool GraspingExperiments::expOutcome(hqp_controllers_msgs::ActivateHQPControl::Request & req, hqp_controllers_msgs::ActivateHQPControl::Response &res)
+{
+    bag_.open(bag_name_, rosbag::bagmode::Append);
+    std_msgs::Bool outcome;
+    outcome.data=req.active;
+
+    bag_.write("experiment_outcome",ros::Time::now(),outcome);
+    bag_.close();
+}
   //---------------------------------------------------------------------------------------------------
 } //end namespace
