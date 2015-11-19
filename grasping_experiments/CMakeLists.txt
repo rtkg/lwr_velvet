@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   hqp_controllers_msgs
   gazebo_msgs
   roscpp
+  rosbag
   velvet_interface_node
 )
 
@@ -51,6 +52,7 @@ find_package(Eigen REQUIRED)
 catkin_package(
      CATKIN_DEPENDS
      roscpp
+     rosbag
      hqp_controllers_msgs
      controller_manager_msgs
      gazebo_msgs

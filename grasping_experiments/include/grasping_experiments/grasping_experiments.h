@@ -7,13 +7,17 @@
 #include <vector>
 #include <std_srvs/Empty.h>
 #include <hqp_controllers_msgs/TaskStatusArray.h>
+#include <hqp_controllers_msgs/ActivateHQPControl.h>
 #include <hqp_controllers_msgs/SetTasks.h>
 #include <Eigen/Core>
 #include <velvet_interface_node/SmartGrasp.h>
 #include <velvet_interface_node/VelvetToPos.h>
 #include <lbr_fri/SetStiffness.h>
 #include <sensor_msgs/JointState.h>
+#include <sensor_msgs/PointCloud2.h>
+#include <tf2_msgs/TFMessage.h>
 #include <controller_manager_msgs/SwitchController.h>
+   #include <rosbag/bag.h>
 
 namespace grasping_experiments
 {
@@ -82,6 +86,13 @@ namespace grasping_experiments
     GraspingExperiments();
 
   private:
+    rosbag::Bag bag_;
+    std::string bag_path_;
+    std::string bag_name_;
+    bool write_jnts_;
+    bool write_tf_;
+    bool write_cluster_;
+
 
     ros::NodeHandle nh_;
     ros::NodeHandle n_;
@@ -103,6 +114,8 @@ namespace grasping_experiments
 
     ros::Subscriber task_status_sub_;
     ros::Subscriber joint_state_sub_;
+    ros::Subscriber cluster_sub_;
+    ros::Subscriber tf_sub_;
 
     ros::ServiceClient set_tasks_clt_;
     ros::ServiceClient get_grasp_interval_clt_;
@@ -118,6 +131,7 @@ namespace grasping_experiments
     ros::ServiceClient set_stiffness_clt_;
     ros::ServiceClient next_truck_task_clt_;
     ros::ServiceServer start_demo_srv_;
+    ros::ServiceServer exp_outcome_srv_;
     ros::ServiceServer gimme_beer_srv_;
     ros::ServiceServer lets_dance_srv_;
     ros::ServiceServer look_what_i_found_srv_;
@@ -170,7 +184,10 @@ namespace grasping_experiments
 
     void taskStatusCallback(const hqp_controllers_msgs::TaskStatusArrayPtr& msg);
     void jointStateCallback(const sensor_msgs::JointStatePtr& msg);
+    void tfCallback(const tf2_msgs::TFMessagePtr& msg);
+    void clusterCallback(const sensor_msgs::PointCloud2Ptr& msg);
     bool startDemo(std_srvs::Empty::Request  &req,std_srvs::Empty::Response &res );
+    bool expOutcome(hqp_controllers_msgs::ActivateHQPControl::Request & req, hqp_controllers_msgs::ActivateHQPControl::Response &res);
     bool gimmeBeer(std_srvs::Empty::Request  &req,std_srvs::Empty::Response &res );
     bool letsDance(std_srvs::Empty::Request  &req,std_srvs::Empty::Response &res );
     bool lookWhatIFound(std_srvs::Empty::Request  &req,std_srvs::Empty::Response &res );

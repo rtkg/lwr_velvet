@@ -44,11 +44,13 @@
 <build_depend>gazebo_msgs</build_depend>
 <build_depend>velvet_interface_node</build_depend>
   <build_depend>roscpp</build_depend>
+ <build_depend>rosbag</build_depend>
   <build_depend>cmake_modules</build_depend> 
 <build_depend>controller_manager_msgs</build_depend>
 
 <run_depend>velvet_interface_node</run_depend>
   <run_depend>hqp_controllers_msgs</run_depend>
+ <run_depend>rosbag</run_depend>
 <run_depend>gazebo_msgs</run_depend>
   <run_depend>roscpp</run_depend>
 <run_depend>lwr_velvet_launch</run_depend>

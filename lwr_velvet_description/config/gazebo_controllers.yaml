@@ -149,11 +149,6 @@
      pid_lwr_a5_joint: {p: 40,  i: 5, d: 7, i_clamp_min: -0.3, i_clamp_max: 0.3}
      pid_lwr_a6_joint: {p: 15,  i: 2, d: 5, i_clamp_min: -0.3, i_clamp_max: 0.3}
 
- #Cartesian impedance controller
-  cartesian_impedance_controller:
-    type: lwr_controllers/CartesianImpedanceController
-    root_name: lwr_base_link
-    tip_name: lwr_7_link
 
  # Joint Group Velocity Controller ----------------------------------------
   lwr_velvet_joint_group_vel_eff_controller:
@@ -188,7 +183,7 @@
 #      - velvet_fingers_joint_1
 
   # HQP Effort Controller ----------------------------------------
-  lwr_velvet_hqp_eff_controller:
+  cartesian_impedance_controller:
     type: hqp_controllers/HQPEffortController
     joints:
       - lwr_a1_joint
