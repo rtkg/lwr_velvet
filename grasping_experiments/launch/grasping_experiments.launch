@@ -2,7 +2,7 @@
 <launch>
   <!-- LAUNCH INTERFACE -->
   <include file="$(find can_finder)/launch/can_finder.launch"/>
-  <include file="$(find velvet_interface_node)/launch/velvet_node.launch"/>
+  <!--include file="$(find velvet_interface_node)/launch/velvet_node.launch"/-->
   <include file="$(find experiment_console)/launch/asus_frames.launch"/>
 
   <!-- set the parameters for the real interface -->
@@ -76,6 +76,10 @@
      <remap from="/joint_states" to="/lwr/joint_states"/>
      <remap from="/switch_controller" to="/lwr/controller_manager/switch_controller"/>
      <remap from="/result_cloud" to="/find_beer/result_cloud"/>
+     <remap from="/get_grasp_interval" to="/find_beer/find_cans"/>
+     <remap from="/velvet_grasp" to="/velvet_node/velvet_grasp"/>
+     <remap from="/velvet_pos" to="/velvet_node/gripper_pos"/>
+
   </node>
 
  <!--load predifined persistent task descriptions (joint limit avoidance, self-collision avoidance ...) definitions for the HQP controller -->

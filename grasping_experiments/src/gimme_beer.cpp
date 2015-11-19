@@ -6,9 +6,11 @@ namespace grasping_experiments
   //----------------------------------------------------------------------------------
   bool GraspingExperiments::gimmeBeer(std_srvs::Empty::Request  &req, std_srvs::Empty::Response &res )
   {
+    ROS_INFO("gimme beer callback");
     ros::Time now=ros::Time::now();
     bag_name_ = bag_path_+"/"+boost::lexical_cast<std::string>(now.toSec())+".bag";
 
+    ROS_INFO("opening bag file");
     bag_.open(bag_name_, rosbag::bagmode::Write);
     controller_manager_msgs::SwitchController switch_msg;
 
@@ -29,6 +31,7 @@ namespace grasping_experiments
 	    safeShutdown();
 	    return false;
 	  }
+	sleep(2);
       }
 
     std_srvs::Empty srv;
@@ -112,7 +115,7 @@ namespace grasping_experiments
 
       if(!with_gazebo_)
 	{
-	  write_cluster_;
+	  write_cluster_ = true;
 	  if(!getGraspInterval())
 	    ROS_WARN("Could not obtain the grasp intervall - using default interval!");
 
@@ -154,7 +157,7 @@ namespace grasping_experiments
       {
 	//SWITCH TO CARTESIAN IMPEDANCE CONTROL
 	switch_msg.request.start_controllers[0]="cartesian_impedance_controller";
-	switch_msg.request.stop_controllers[0]="lwr_velvet_hqp_eff_controller";
+	switch_msg.request.stop_controllers[0]="lwr_velvet_hqp_vel_controller";
 	switch_msg.request.strictness=2;   
 	switch_msg.response.ok=false;
 
@@ -190,13 +193,16 @@ namespace grasping_experiments
 	//SWITCH TO HQP CONTROL
 	switch_msg.request.start_controllers[0]=("lwr_velvet_hqp_vel_controller");
 	switch_msg.request.stop_controllers[0]=("cartesian_impedance_controller");
+	switch_msg.request.strictness=2;   
 	switch_msg.response.ok=false;
+	switch_controller_clt_.call(switch_msg);
 	if(!switch_msg.response.ok)
 	  {
 	    ROS_ERROR("Could not switch to the hqp controller!");
 	    safeShutdown();
 	    return false;
 	  }
+	sleep(2);
       }
 
 
@@ -297,6 +303,25 @@ namespace grasping_experiments
     reset_hqp_control_clt_.call(srv);
     pers_task_vis_ids_.clear();
 
+    if(!with_gazebo_)
+      {
+	//SWITCH BACK TO POSITION CONTROL
+	switch_msg.request.start_controllers[0] = "joint_trajectory_controller";
+	switch_msg.request.stop_controllers[0] = "lwr_velvet_hqp_vel_controller";
+	switch_msg.request.strictness=2;   
+	switch_msg.response.ok=false;
+
+	ROS_INFO("Switching to position control.");
+	deactivateHQPControl();
+	switch_controller_clt_.call(switch_msg);
+	if(!switch_msg.response.ok)
+	  {
+	    ROS_ERROR("Could not switch to the hqp velocity controller!");
+	    safeShutdown();
+	    return false;
+	  }
+	sleep(2);
+      }
 #if 0
 #endif
     ROS_INFO("GIMME BEER FINISHED.");

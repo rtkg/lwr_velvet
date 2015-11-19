@@ -64,14 +64,14 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
         get_grasp_interval_clt_ = n_.serviceClient<hqp_controllers_msgs::FindCanTask>("get_grasp_interval");
         velvet_pos_clt_ = n_.serviceClient<velvet_interface_node::VelvetToPos>("velvet_pos");
         velvet_grasp_clt_ = n_.serviceClient<velvet_interface_node::SmartGrasp>("velvet_grasp");
-        set_stiffness_clt_ = n_.serviceClient<lbr_fri::SetStiffness>("set_stiffness");
-        next_truck_task_clt_ = n_.serviceClient<std_srvs::Empty>("execute_truck_task");
+        //set_stiffness_clt_ = n_.serviceClient<lbr_fri::SetStiffness>("set_stiffness");
+        //next_truck_task_clt_ = n_.serviceClient<std_srvs::Empty>("execute_truck_task");
 	
 	get_grasp_interval_clt_.waitForExistence();
         velvet_pos_clt_.waitForExistence();
         velvet_grasp_clt_.waitForExistence();
-        set_stiffness_clt_.waitForExistence();
-        next_truck_task_clt_.waitForExistence();
+        //set_stiffness_clt_.waitForExistence();
+        //next_truck_task_clt_.waitForExistence();
     }
     else
     {
@@ -1401,7 +1401,7 @@ bool GraspingExperiments::setGraspApproach()
     task.ds = 0.0;
     task.di = 1;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
-    task.dynamics.d_data.push_back(DYNAMICS_GAIN * 3/2);
+    task.dynamics.d_data.push_back(DYNAMICS_GAIN); // * 3/2);
 
     t_link.geometries.clear();
     t_geom.g_data.clear();

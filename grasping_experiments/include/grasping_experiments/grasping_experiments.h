@@ -26,7 +26,7 @@ namespace grasping_experiments
 
 #define PILE_GRASPING 1
 
-#define DYNAMICS_GAIN  -0.8
+#define DYNAMICS_GAIN  -0.5
 #define ALIGNMENT_ANGLE  0.05
 
 #define SAFETY_HEIGHT 0.34
