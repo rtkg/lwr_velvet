@@ -45,7 +45,7 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     start_demo_srv_ = nh_.advertiseService("start_demo", &GraspingExperiments::startDemo, this);
     gimme_beer_srv_ = nh_.advertiseService("gimme_beer", &GraspingExperiments::gimmeBeer, this);
     approach_beer_srv_ = nh_.advertiseService("approach_beer", &GraspingExperiments::approachBeer, this);
-    approach_beer_srv_ = nh_.advertiseService("extract_beer", &GraspingExperiments::extractBeer, this);
+    extract_beer_srv_ = nh_.advertiseService("extract_beer", &GraspingExperiments::extractBeer, this);
     lets_dance_srv_ = nh_.advertiseService("lets_dance", &GraspingExperiments::letsDance, this);
     exp_outcome_srv_ = nh_.advertiseService("experiment_outcome", &GraspingExperiments::expOutcome, this);
     look_what_i_found_srv_ = nh_.advertiseService("look_what_i_found", &GraspingExperiments::lookWhatIFound, this);

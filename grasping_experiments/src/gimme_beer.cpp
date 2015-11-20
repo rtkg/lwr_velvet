@@ -177,8 +177,8 @@ namespace grasping_experiments
 	//VELVET GRASP_
 	velvet_interface_node::SmartGrasp graspcall;
 	graspcall.request.current_threshold_contact = 30;
-	graspcall.request.current_threshold_final = 45;
-	graspcall.request.max_belt_travel_mm = -160;
+	graspcall.request.current_threshold_final = 65;
+	graspcall.request.max_belt_travel_mm = -180;
 	graspcall.request.phalange_delta_rad = 0.02;
 	graspcall.request.gripper_closed_thresh = 1.5;
 	graspcall.request.check_phalanges = false;
@@ -485,6 +485,7 @@ namespace grasping_experiments
       ros::Duration(0.5).sleep(); //make sure to write tf to the bag file
     }
 
+    deactivateHQPControl();
     ROS_INFO("APPROACH BEER FINISHED.");
 
     bag_.close();
@@ -519,8 +520,8 @@ namespace grasping_experiments
 	//VELVET GRASP_
 	velvet_interface_node::SmartGrasp graspcall;
 	graspcall.request.current_threshold_contact = 30;
-	graspcall.request.current_threshold_final = 45;
-	graspcall.request.max_belt_travel_mm = -160;
+	graspcall.request.current_threshold_final = 65;
+	graspcall.request.max_belt_travel_mm = -180;
 	graspcall.request.phalange_delta_rad = 0.02;
 	graspcall.request.gripper_closed_thresh = 1.5;
 	graspcall.request.check_phalanges = false;
