@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" 
        name="lwr_velvet">
-       
-<!-- RTKG: adapted from the Vito robot description -->
+  
+  <!-- RTKG: adapted from the Aalto robot description -->
 
   <!-- MODELS -->
   <xacro:include filename="$(find lwr_velvet_description)/urdf/torso.urdf.xacro"/>
@@ -12,52 +12,55 @@
   <xacro:include filename="$(find velvet_fingers_description)/urdf/velvet_fingers.xacro"/>
 
 
-  <link name="world" />
+  <link name="world">
+    <visual>
+      <origin xyz="0 0 0.0075" rpy="0 0 0"/>
+      <geometry>
+	<box size="2.0 3.0 0.015"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.0075" rpy="0 0 0"/>
+      <geometry>
+	<box size="2.0 0.1 0.015"/>
+      </geometry>
+    </collision>
+  </link>
   
-  <!-- BODY -->
-  <xacro:model_table name="table" 
-                    parent="world"
-                    length="0.725"
-                    width="1.05"
-                    height="0.910"
-                    plate_thickness="0.05">
-    <origin xyz="-0.495 0.55 0.91" rpy="0 0 0"/>
-  </xacro:model_table>
+  <!-- TABLE -->
+  <!--xacro:model_table name="table" 
+      parent="world"
+      length="0.725"
+      width="1.05"
+      height="0.910"
+      plate_thickness="0.05">
+      <origin xyz="-0.495 0.55 0.91" rpy="0 0 0"/>
+      </xacro:model_table-->
 
   <!-- WORKBENCH -->
-  <xacro:model_table name="workbench"
-                    parent="world"
-                    length="0.725"
-                    width="1.05"
-                    height="0.960"
-                    plate_thickness="0.1">
-  <origin xyz="-1.25 0.55 0.98" rpy="0 0 0"/>
-  </xacro:model_table>
+  <!--xacro:model_table name="workbench"
+      parent="world"
+      length="0.725"
+      width="1.05"
+      height="0.960"
+      plate_thickness="0.1">
+      <origin xyz="-1.25 0.55 0.98" rpy="0 0 0"/>
+      </xacro:model_table-->
 
   <!-- TORSO -->
-  <xacro:model_torso name="torso" parent="world">
-    <origin xyz="0 0 0.91"/>
-  </xacro:model_torso>
+  <!--xacro:model_torso name="torso" parent="world">
+      <origin xyz="0 0 0.91"/>
+      </xacro:model_torso-->
   
-  <!-- LEFT ARM 
-  <xacro:lwr name="left_arm" hardware_interface="$(arg prefix)" parent="world">
-    <origin xyz="-0.165 -0.1085854 0.390" rpy="1.5707963267948966 0.5235987010713441 -0.5235990737060282"/>
-  </xacro:lwr-->
-
-  <!-- LEFT SOFTHAND 
-  <xacro:soft_hand parent="left_arm_7_link" name="left_hand" left="true" withAdaptiveTransmission="true" useMimicTag="$(arg use_mimic_tag)">
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-  </xacro:soft_hand-->
-
   <!-- RIGHT ARM -->
   <xacro:kuka_lwr name="lwr" parent="world" hardware_interface="$(arg prefix)">
-    <origin xyz="-0.165 0.10858 1.3" rpy="-1.5707963267948966 0.5235987010713441 0.5235990737060282"/>
+    <origin xyz="0 0 0.015" rpy="0 0 0"/>
   </xacro:kuka_lwr>
 
   <!-- RIGHT SOFTHAND
-  <xacro:soft_hand parent="right_arm_7_link" name="right_hand" left="false" withAdaptiveTransmission="true" useMimicTag="$(arg use_mimic_tag)">
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-  </xacro:soft_hand-->
+       <xacro:soft_hand parent="right_arm_7_link" name="right_hand" left="false" withAdaptiveTransmission="true" useMimicTag="$(arg use_mimic_tag)">
+       <origin xyz="0 0 0" rpy="0 0 0"/>
+       </xacro:soft_hand-->
 
   <!--velvet fingers gripper-->
   <xacro:velvet_fingers name="velvet_fingers" hardware_interface="$(arg prefix)" parent="lwr_7_link">
