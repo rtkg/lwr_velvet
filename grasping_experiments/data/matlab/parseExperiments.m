@@ -1,6 +1,6 @@
 clear all; close all; clc;
 
-dir_path='../bull_pile/';
+dir_path='../beer_square/';
 bags=dir(dir_path);
 bags(1:2)=[]; %remove the current/previous directories ('.' and '..')
 prune=50; %remove the first steps of each trajectory (residual movements)
@@ -33,6 +33,15 @@ for i=1:numel(bags)
             j_start=j;
         end
     end
+    
+%     result_cloud=readMessages(select(bagselect,'Topic','result_cloud'));
+%     t_cl=cast(result_cloud{1}.Header.Stamp.Sec,'Double')+cast(result_cloud{1}.Header.Stamp.Nsec,'Double')/1e9;
+%     t=data(i).joint_states.t;
+%     t_cl=t_cl-min(t);
+%     t=t-min(t);
+%     close all; plot(t,data(i).joint_states.Position'); hold on;
+%     plot(t_cl,0,'rs');
+%     keyboard
     
     %cut off the motionless initial part of the trajectories
     data(i).joint_states.Position(:,1:j_start-1)=[];
