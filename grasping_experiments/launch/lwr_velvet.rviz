@@ -9,6 +9,8 @@ Panels:
         - /Tasks1
         - /PointCloud21
         - /PointCloud22
+        - /MarkerArray1
+        - /MarkerArray2
       Splitter Ratio: 0.463497
     Tree Height: 755
   - Class: rviz/Selection
@@ -28,7 +30,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: PointCloud2
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -128,40 +130,11 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        table_leg_0_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        table_leg_1_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        table_leg_2_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        table_leg_3_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        table_plate_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        torso_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         velvet_fingers_left:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+          Value: true
         velvet_fingers_palm:
           Alpha: 1
           Show Axes: false
@@ -171,35 +144,12 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        workbench_leg_0_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        workbench_leg_1_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        workbench_leg_2_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        workbench_leg_3_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        workbench_plate_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
           Value: true
         world:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+          Value: true
       Name: LWR_VELVET
       Robot Description: robot_description
       TF Prefix: ""
@@ -211,7 +161,7 @@ Visualization Manager:
       Marker Topic: /lwr/lwr_velvet_hqp_vel_controller/task_geometries
       Name: Tasks
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -268,9 +218,112 @@ Visualization Manager:
       Size (Pixels): 10
       Size (m): 0.01
       Style: Points
-      Topic: /find_beer/result_cloud
+      Topic: /gplanner/fused_pc
       Use Fixed Frame: true
       Use rainbow: true
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /gplanner/sdf_marker
+      Name: MarkerArray
+      Namespaces:
+        my_namespace: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /gplanner/constraint_marker
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        lwr_1_link:
+          Value: true
+        lwr_1_link_dummy:
+          Value: true
+        lwr_2_link:
+          Value: true
+        lwr_2_link_dummy:
+          Value: true
+        lwr_3_link:
+          Value: true
+        lwr_3_link_dummy:
+          Value: true
+        lwr_4_link:
+          Value: true
+        lwr_4_link_dummy:
+          Value: true
+        lwr_5_link:
+          Value: true
+        lwr_5_link_dummy:
+          Value: true
+        lwr_6_link:
+          Value: true
+        lwr_6_link_dummy:
+          Value: true
+        lwr_7_link:
+          Value: true
+        lwr_7_link_dummy:
+          Value: true
+        lwr_base_link:
+          Value: true
+        object_frame:
+          Value: true
+        sdf_map_frame:
+          Value: true
+        velvet_fingers_left:
+          Value: true
+        velvet_fingers_palm:
+          Value: true
+        velvet_fingers_right:
+          Value: true
+        world:
+          Value: true
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        world:
+          lwr_base_link:
+            lwr_1_link:
+              lwr_2_link:
+                lwr_3_link:
+                  lwr_4_link:
+                    lwr_5_link:
+                      lwr_6_link:
+                        lwr_7_link:
+                          velvet_fingers_palm:
+                            velvet_fingers_left:
+                              {}
+                            velvet_fingers_right:
+                              {}
+                        lwr_7_link_dummy:
+                          {}
+                      lwr_6_link_dummy:
+                        {}
+                    lwr_5_link_dummy:
+                      {}
+                  lwr_4_link_dummy:
+                    {}
+                lwr_3_link_dummy:
+                  {}
+              lwr_2_link_dummy:
+                {}
+            lwr_1_link_dummy:
+              {}
+            sdf_map_frame:
+              {}
+          object_frame:
+            {}
+      Update Interval: 0
       Value: true
   Enabled: true
   Global Options:
@@ -294,22 +347,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 7.07556
+      Distance: 4.004
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.35347
-        Y: -0.129066
-        Z: -0.184367
+        X: -0.0210792
+        Y: 0.00218613
+        Z: 0.300231
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.615398
+      Pitch: 0.600398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.53539
+      Yaw: 5.36539
     Saved: ~
 Window Geometry:
   Displays:

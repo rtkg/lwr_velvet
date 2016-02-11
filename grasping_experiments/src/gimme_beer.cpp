@@ -100,7 +100,7 @@ namespace grasping_experiments
     }
 #endif
     {//GRASP APPROACH
-      write_jnts_=true;
+      //write_jnts_=true;
       ROS_INFO("Trying grasp approach.");
       boost::mutex::scoped_lock lock(manipulator_tasks_m_);
       task_status_changed_ = false;
@@ -115,7 +115,7 @@ namespace grasping_experiments
 
       //if(!with_gazebo_)
 	{
-	  write_cluster_ = true;
+	  //write_cluster_ = true;
 	  if(!getGraspInterval())
 	    ROS_WARN("Could not obtain the grasp intervall - using default interval!");
 
@@ -149,8 +149,8 @@ namespace grasping_experiments
 	}
 
       ROS_INFO("Grasp approach tasks executed successfully.");
-      write_jnts_=false;
-      write_tf_=true;
+      //write_jnts_=false;
+      //write_tf_=true;
     }
 #if 0
     if(!with_gazebo_)
@@ -432,7 +432,7 @@ namespace grasping_experiments
     }
 
     {//GRASP APPROACH
-      write_jnts_=true;
+      //write_jnts_=true;
       ROS_INFO("Trying grasp approach.");
       boost::mutex::scoped_lock lock(manipulator_tasks_m_);
       task_status_changed_ = false;
@@ -447,7 +447,7 @@ namespace grasping_experiments
 
       if(!with_gazebo_)
 	{
-	  write_cluster_ = true;
+	  //write_cluster_ = true;
 	  if(!getGraspInterval())
 	    ROS_WARN("Could not obtain the grasp intervall - using default interval!");
 
@@ -481,8 +481,8 @@ namespace grasping_experiments
 	}
 
       ROS_INFO("Grasp approach tasks executed successfully.");
-      write_jnts_=false;
-      write_tf_=true;
+      //write_jnts_=false;
+      //write_tf_=true;
       ros::Duration(0.5).sleep(); //make sure to write tf to the bag file
     }
 

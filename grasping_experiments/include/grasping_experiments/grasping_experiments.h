@@ -120,6 +120,8 @@ namespace grasping_experiments
     ros::Subscriber joint_state_sub_;
     ros::Subscriber cluster_sub_;
     ros::Subscriber tf_sub_;
+    
+    ros::Publisher task_feedback_pub_;
 
     ros::ServiceClient set_tasks_clt_;
     ros::ServiceClient get_grasp_interval_clt_;

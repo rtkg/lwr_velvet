@@ -60,30 +60,41 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     set_gazebo_physics_clt_ = n_.serviceClient<gazebo_msgs::SetPhysicsProperties>("set_physics_properties");
     load_tasks_clt_ = n_.serviceClient<hqp_controllers_msgs::LoadTasks>("load_tasks");
     reset_hqp_control_clt_ = n_.serviceClient<std_srvs::Empty>("reset_hqp_control");
+    
+    task_feedback_pub_ = n_.advertise<hqp_controllers_msgs::Task> ("task_feedback",10);
 
     //hardcode graciously the frame, pose and bbox of object
-    grasp_planner::PlanGrasp grasp_plan_request;
-    nh_.param<std::string>("grasp_req_frame", grasp_plan_request.request.header.frame_id , "object_frame");
+    nh_.param<std::string>("grasp_req_frame", grasp_plan_request.request.header.frame_id , "world");
     nh_.param<float>("grasp_req_radius", grasp_plan_request.request.object_radius , 0);
     nh_.param<float>("grasp_req_height", grasp_plan_request.request.object_height , 0);
-    grasp_plan_request.request.objectPose.position.x = 0;
-    grasp_plan_request.request.objectPose.position.y = 0;
-    grasp_plan_request.request.objectPose.position.z = 0;
-    grasp_plan_request.request.objectPose.orientation.x = 0;
-    grasp_plan_request.request.objectPose.orientation.y = 0;
-    grasp_plan_request.request.objectPose.orientation.z = 0;
-    grasp_plan_request.request.objectPose.orientation.w = 1;
-    
+    float px,py,pz, ox,oy,oz,ow;
+    nh_.param<float>("grasp_req_px",px, 0);
+    nh_.param<float>("grasp_req_py",py, 0);
+    nh_.param<float>("grasp_req_pz",pz, 0);
+    nh_.param<float>("grasp_req_ox",ox, 0);
+    nh_.param<float>("grasp_req_oy",oy, 0);
+    nh_.param<float>("grasp_req_oz",oz, 0);
+    nh_.param<float>("grasp_req_ow",ow, 0);
+
+    grasp_plan_request.request.objectPose.position.x = px;
+    grasp_plan_request.request.objectPose.position.y = py;
+    grasp_plan_request.request.objectPose.position.z = pz;
+    grasp_plan_request.request.objectPose.orientation.x = ox;
+    grasp_plan_request.request.objectPose.orientation.y = oy;
+    grasp_plan_request.request.objectPose.orientation.z = oz;
+    grasp_plan_request.request.objectPose.orientation.w = ow;
+
+
     switch_controller_clt_ = n_.serviceClient<controller_manager_msgs::SwitchController>("switch_controller");
+    get_grasp_interval_clt_ = n_.serviceClient<grasp_planner::PlanGrasp>("get_grasp_interval");
+    get_grasp_interval_clt_.waitForExistence();
     if(!with_gazebo_)
     {
-        get_grasp_interval_clt_ = n_.serviceClient<grasp_planner::PlanGrasp>("get_grasp_interval");
         velvet_pos_clt_ = n_.serviceClient<velvet_interface_node::VelvetToPos>("velvet_pos");
         velvet_grasp_clt_ = n_.serviceClient<velvet_interface_node::SmartGrasp>("velvet_grasp");
         //set_stiffness_clt_ = n_.serviceClient<lbr_fri::SetStiffness>("set_stiffness");
         //next_truck_task_clt_ = n_.serviceClient<std_srvs::Empty>("execute_truck_task");
 	
-	get_grasp_interval_clt_.waitForExistence();
         velvet_pos_clt_.waitForExistence();
         velvet_grasp_clt_.waitForExistence();
         //set_stiffness_clt_.waitForExistence();
@@ -1595,7 +1606,70 @@ bool GraspingExperiments::setGraspApproach()
     task.t_links.push_back(t_link);
 
     tasks_.request.tasks.push_back(task);
+   
+    //LEFT GRASP INTERVAL PLANE
+    task.t_links.clear();
+    task.dynamics.d_data.clear();
 
+    task.t_type = hqp_controllers_msgs::Task::PROJECTION;
+    task.priority = 2;
+    task.is_equality_task = false;
+    task.task_frame = grasp_.obj_frame_;
+    task.ds = 0.0;
+    task.di = 0.05;
+    task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
+    task.dynamics.d_data.push_back(DYNAMICS_GAIN);
+
+    t_link.geometries.clear();
+    t_geom.g_data.clear();
+    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::PLANE;
+    t_geom.g_data.push_back(grasp_.n3_(0)); t_geom.g_data.push_back(grasp_.n3_(1)); t_geom.g_data.push_back(grasp_.n3_(2));
+    t_geom.g_data.push_back(grasp_.d3_);
+    t_link.link_frame = grasp_.obj_frame_;
+    t_link.geometries.push_back(t_geom);
+    task.t_links.push_back(t_link);
+
+    t_link.geometries.clear();
+    t_geom.g_data.clear();
+    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::POINT;
+    t_geom.g_data.push_back(grasp_.e_(0)); t_geom.g_data.push_back(grasp_.e_(1)); t_geom.g_data.push_back(grasp_.e_(2));
+    t_link.link_frame = grasp_.e_frame_;
+    t_link.geometries.push_back(t_geom);
+    task.t_links.push_back(t_link);
+
+    tasks_.request.tasks.push_back(task);
+
+    //RIGHT GRASP INTERVAL PLANE
+    task.t_links.clear();
+    task.dynamics.d_data.clear();
+
+    task.t_type = hqp_controllers_msgs::Task::PROJECTION;
+    task.priority = 2;
+    task.is_equality_task = false;
+    task.task_frame = grasp_.obj_frame_;
+    task.ds = 0.0;
+    task.di = 0.05;
+    task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
+    task.dynamics.d_data.push_back(DYNAMICS_GAIN);
+
+    t_link.geometries.clear();
+    t_geom.g_data.clear();
+    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::PLANE;
+    t_geom.g_data.push_back(grasp_.n4_(0)); t_geom.g_data.push_back(grasp_.n4_(1)); t_geom.g_data.push_back(grasp_.n4_(2));
+    t_geom.g_data.push_back(grasp_.d4_);
+    t_link.link_frame = grasp_.obj_frame_;
+    t_link.geometries.push_back(t_geom);
+    task.t_links.push_back(t_link);
+
+    t_link.geometries.clear();
+    t_geom.g_data.clear();
+    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::POINT;
+    t_geom.g_data.push_back(grasp_.e_(0)); t_geom.g_data.push_back(grasp_.e_(1)); t_geom.g_data.push_back(grasp_.e_(2));
+    t_link.link_frame = grasp_.e_frame_;
+    t_link.geometries.push_back(t_geom);
+    task.t_links.push_back(t_link);
+
+    tasks_.request.tasks.push_back(task);
     //INNER CONSTRAINT CYLINDER
     task.t_links.clear();
     task.dynamics.d_data.clear();
@@ -1729,7 +1803,13 @@ bool GraspingExperiments::setGraspApproach()
     task.t_links.push_back(t_link);
 
     tasks_.request.tasks.push_back(task);
+
+#if 0 
 #endif
+#endif
+    for(int xx=0; xx<tasks_.request.tasks.size(); xx++) {
+	task_feedback_pub_.publish(tasks_.request.tasks[xx]);
+    }
 
     //send the filled task message to the controller
     if(!sendStateTasks())
