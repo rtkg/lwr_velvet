@@ -59,7 +59,7 @@ namespace grasping_experiments
 	    ROS_BREAK();
 	  }
       }
-
+#if 0
     {//MANIPULATOR SENSING CONFIGURATION
       ROS_INFO("Trying to put the manipulator in sensing configuration.");
       boost::mutex::scoped_lock lock(manipulator_tasks_m_);
@@ -98,7 +98,7 @@ namespace grasping_experiments
 	}
       ROS_INFO("Manipulator sensing state tasks executed successfully.");
     }
-
+#endif
     {//GRASP APPROACH
       write_jnts_=true;
       ROS_INFO("Trying grasp approach.");
@@ -113,7 +113,7 @@ namespace grasping_experiments
 	  return false;
 	}
 
-      if(!with_gazebo_)
+      //if(!with_gazebo_)
 	{
 	  write_cluster_ = true;
 	  if(!getGraspInterval())
@@ -152,7 +152,7 @@ namespace grasping_experiments
       write_jnts_=false;
       write_tf_=true;
     }
-
+#if 0
     if(!with_gazebo_)
       {
 	//SWITCH TO CARTESIAN IMPEDANCE CONTROL
@@ -286,6 +286,7 @@ namespace grasping_experiments
 	}
       ROS_INFO("Manipulator gimme beer configuration tasks executed successfully.");
     }
+#endif
 
 #if 0
     if(!with_gazebo_)
@@ -306,6 +307,7 @@ namespace grasping_experiments
     reset_hqp_control_clt_.call(srv);
     pers_task_vis_ids_.clear();
 
+#if 0
     if(!with_gazebo_)
       {
 	//SWITCH BACK TO POSITION CONTROL
@@ -325,7 +327,6 @@ namespace grasping_experiments
 	  }
 	sleep(2);
       }
-#if 0
 #endif
     ROS_INFO("GIMME BEER FINISHED.");
 

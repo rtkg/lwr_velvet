@@ -61,10 +61,23 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     load_tasks_clt_ = n_.serviceClient<hqp_controllers_msgs::LoadTasks>("load_tasks");
     reset_hqp_control_clt_ = n_.serviceClient<std_srvs::Empty>("reset_hqp_control");
 
+    //hardcode graciously the frame, pose and bbox of object
+    grasp_planner::PlanGrasp grasp_plan_request;
+    nh_.param<std::string>("grasp_req_frame", grasp_plan_request.request.header.frame_id , "object_frame");
+    nh_.param<float>("grasp_req_radius", grasp_plan_request.request.object_radius , 0);
+    nh_.param<float>("grasp_req_height", grasp_plan_request.request.object_height , 0);
+    grasp_plan_request.request.objectPose.position.x = 0;
+    grasp_plan_request.request.objectPose.position.y = 0;
+    grasp_plan_request.request.objectPose.position.z = 0;
+    grasp_plan_request.request.objectPose.orientation.x = 0;
+    grasp_plan_request.request.objectPose.orientation.y = 0;
+    grasp_plan_request.request.objectPose.orientation.z = 0;
+    grasp_plan_request.request.objectPose.orientation.w = 1;
+    
     switch_controller_clt_ = n_.serviceClient<controller_manager_msgs::SwitchController>("switch_controller");
     if(!with_gazebo_)
     {
-        get_grasp_interval_clt_ = n_.serviceClient<hqp_controllers_msgs::FindCanTask>("get_grasp_interval");
+        get_grasp_interval_clt_ = n_.serviceClient<grasp_planner::PlanGrasp>("get_grasp_interval");
         velvet_pos_clt_ = n_.serviceClient<velvet_interface_node::VelvetToPos>("velvet_pos");
         velvet_grasp_clt_ = n_.serviceClient<velvet_interface_node::SmartGrasp>("velvet_grasp");
         //set_stiffness_clt_ = n_.serviceClient<lbr_fri::SetStiffness>("set_stiffness");
@@ -248,54 +261,68 @@ bool GraspingExperiments::getGraspInterval()
 {
     //get the grasp intervall
     get_grasp_interval_clt_.waitForExistence();
-    hqp_controllers_msgs::FindCanTask grasp;
-    get_grasp_interval_clt_.call(grasp);
+    
+    get_grasp_interval_clt_.call(grasp_plan_request);
 
-    if(!grasp.response.success)
+    if(!grasp_plan_request.response.success)
         return false;
 
 #ifdef PILE_GRASPING
-    ROS_ASSERT(grasp.response.CanTask.size()==2);
+    ROS_ASSERT(grasp.response.constraints.size()==2);
     std::vector<double> data;
     grasp_.obj_frame_ = grasp.response.reference_frame;
 
-    ROS_ASSERT(grasp.response.CanTask[0].g_type == hqp_controllers_msgs::TaskGeometry::POINT);
-    data = grasp.response.CanTask[0].g_data;
+    ROS_ASSERT(grasp.response.constraints[0].g_type == hqp_controllers_msgs::TaskGeometry::POINT);
+    data = grasp.response.constraints[0].g_data;
     grasp_.p_(0) = data[0]; grasp_.p_(1) = data[1]; grasp_.p_(2) = data[2];
 
-    ROS_ASSERT(grasp.response.CanTask[1].g_type == hqp_controllers_msgs::TaskGeometry::LINE);
-    data = grasp.response.CanTask[1].g_data;
+    ROS_ASSERT(grasp.response.constraints[1].g_type == hqp_controllers_msgs::TaskGeometry::LINE);
+    data = grasp.response.constraints[1].g_data;
     grasp_.a_(0) = data[3]; grasp_.a_(1) = data[4]; grasp_.a_(2) = data[5];
 #else
-    ROS_ASSERT(grasp.response.CanTask.size()==4);
+    ROS_ASSERT(grasp_plan_request.response.constraints.size()==6);
     std::vector<double> data;
-    grasp_.obj_frame_ = grasp.response.reference_frame;
+    grasp_.obj_frame_ = grasp_plan_request.response.frame_id;
 
     //BOTTOM PLANE
-    ROS_ASSERT(grasp.response.CanTask[0].g_type == hqp_controllers_msgs::TaskGeometry::PLANE);
-    data = grasp.response.CanTask[0].g_data;
+    ROS_ASSERT(grasp_plan_request.response.constraints[0].g_type == hqp_controllers_msgs::TaskGeometry::PLANE);
+    data = grasp_plan_request.response.constraints[0].g_data;
     ROS_ASSERT(data.size() == 4);
     grasp_.n1_(0) = data[0];  grasp_.n1_(1) = data[1]; grasp_.n1_(2) = data[2];
     grasp_.d1_ = data[3];
 
     //TOP PLANE
-    ROS_ASSERT(grasp.response.CanTask[1].g_type == hqp_controllers_msgs::TaskGeometry::PLANE);
-    data = grasp.response.CanTask[1].g_data;
+    ROS_ASSERT(grasp_plan_request.response.constraints[1].g_type == hqp_controllers_msgs::TaskGeometry::PLANE);
+    data = grasp_plan_request.response.constraints[1].g_data;
     ROS_ASSERT(data.size() == 4);
     grasp_.n2_(0) = data[0];  grasp_.n2_(1) = data[1]; grasp_.n2_(2) = data[2];
     grasp_.d2_ = data[3];
 
+    //LEFT PLANE
+    ROS_ASSERT(grasp_plan_request.response.constraints[2].g_type == hqp_controllers_msgs::TaskGeometry::PLANE);
+    data = grasp_plan_request.response.constraints[2].g_data;
+    ROS_ASSERT(data.size() == 4);
+    grasp_.n3_(0) = data[0];  grasp_.n3_(1) = data[1]; grasp_.n3_(2) = data[2];
+    grasp_.d3_ = data[3];
+
+    //RIGHT PLANE
+    ROS_ASSERT(grasp_plan_request.response.constraints[3].g_type == hqp_controllers_msgs::TaskGeometry::PLANE);
+    data = grasp_plan_request.response.constraints[3].g_data;
+    ROS_ASSERT(data.size() == 4);
+    grasp_.n4_(0) = data[0];  grasp_.n4_(1) = data[1]; grasp_.n4_(2) = data[2];
+    grasp_.d4_ = data[3];
+
     //INNER GRASP CYLINDER
-    ROS_ASSERT(grasp.response.CanTask[2].g_type == hqp_controllers_msgs::TaskGeometry::CYLINDER);
-    data = grasp.response.CanTask[2].g_data;
+    ROS_ASSERT(grasp_plan_request.response.constraints[4].g_type == hqp_controllers_msgs::TaskGeometry::CYLINDER);
+    data = grasp_plan_request.response.constraints[4].g_data;
     ROS_ASSERT(data.size() == 7);
     grasp_.p_(0) = data[0];  grasp_.p_(1) = data[1]; grasp_.p_(2) = data[2];
     grasp_.v_(0) = data[3];  grasp_.v_(1) = data[4]; grasp_.v_(2) = data[5];
     grasp_.r1_ = data[6];
 
     //OUTER GRASP CYLINDER
-    ROS_ASSERT(grasp.response.CanTask[3].g_type == hqp_controllers_msgs::TaskGeometry::CYLINDER);
-    data = grasp.response.CanTask[3].g_data;
+    ROS_ASSERT(grasp_plan_request.response.constraints[5].g_type == hqp_controllers_msgs::TaskGeometry::CYLINDER);
+    data = grasp_plan_request.response.constraints[5].g_data;
     ROS_ASSERT(data.size() == 7);
     grasp_.r2_ = data[6];
 
@@ -1090,6 +1117,7 @@ bool GraspingExperiments::setObjectPlace(PlaceInterval const& place)
 //-----------------------------------------------------------------
 bool GraspingExperiments::setObjectExtract()
 {
+#if 0
     hqp_controllers_msgs::Task task;
     hqp_controllers_msgs::TaskLink t_link;
     hqp_controllers_msgs::TaskGeometry t_geom;
@@ -1216,7 +1244,7 @@ bool GraspingExperiments::setObjectExtract()
 
     if(!visualizeStateTasks(ids))
         return false;
-
+#endif
     return true;
 }
 //-----------------------------------------------------------------

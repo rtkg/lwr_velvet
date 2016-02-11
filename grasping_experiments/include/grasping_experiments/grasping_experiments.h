@@ -17,6 +17,7 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <tf2_msgs/TFMessage.h>
 #include <controller_manager_msgs/SwitchController.h>
+#include <grasp_planner/PlanGrasp.h>
    #include <rosbag/bag.h>
 
 namespace grasping_experiments
@@ -24,7 +25,7 @@ namespace grasping_experiments
   //-----------------------------------------------------------
   //#define HQP_GRIPPER_JOINT 1
 
-#define PILE_GRASPING 1
+//#define PILE_GRASPING 1
 
 #define DYNAMICS_GAIN  -0.5
 #define ALIGNMENT_ANGLE  0.05
@@ -49,6 +50,8 @@ namespace grasping_experiments
 
     Eigen::Vector3d n1_, n2_; //plane normals
     double d1_, d2_; //plane offsets d1 !> d2
+    Eigen::Vector3d n3_, n4_; //plane normals
+    double d3_, d4_; //plane offsets d1 !> d2
 #endif
   };
   //-----------------------------------------------------------
@@ -109,6 +112,7 @@ namespace grasping_experiments
 
     //**Grasp definition - this should be modified to grasp different objects */
     GraspInterval grasp_;
+    grasp_planner::PlanGrasp grasp_plan_request;
     std::vector<PlaceInterval> place_zones_; ///< placement zones for the object
     Eigen::VectorXd t_prog_prev_;
 
