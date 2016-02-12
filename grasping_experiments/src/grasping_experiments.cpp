@@ -1607,6 +1607,7 @@ bool GraspingExperiments::setGraspApproach()
 
     tasks_.request.tasks.push_back(task);
    
+#if 0 
     //LEFT GRASP INTERVAL PLANE
     task.t_links.clear();
     task.dynamics.d_data.clear();
@@ -1804,7 +1805,6 @@ bool GraspingExperiments::setGraspApproach()
 
     tasks_.request.tasks.push_back(task);
 
-#if 0 
 #endif
 #endif
     for(int xx=0; xx<tasks_.request.tasks.size(); xx++) {
