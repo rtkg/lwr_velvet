@@ -159,6 +159,24 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
 #endif
 
     sensing_config_ = std::vector<double>(n_jnts);
+    sensing_config_[0] = -0.25;
+    sensing_config_[1] = -1.0;
+    sensing_config_[2] = 0.89;
+    sensing_config_[3] = 0.93;
+    sensing_config_[4] = -2.73;
+    sensing_config_[5] = 1.91;
+    sensing_config_[6] = 1.42;
+   
+    sensing_config2_ = std::vector<double>(n_jnts);
+    sensing_config2_[0] = 0.195;
+    sensing_config2_[1] = -0.81;
+    sensing_config2_[2] = 0.916;
+    sensing_config2_[3] = 0.67;
+    sensing_config2_[4] = -2.86;
+    sensing_config2_[5] = 1.96;
+    sensing_config2_[6] = 1.42;
+#if 0
+    sensing_config_ = std::vector<double>(n_jnts);
     sensing_config_[0] = 2.13;
     sensing_config_[1] = 0.93;
     sensing_config_[2] = 0.43;
@@ -166,6 +184,7 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     sensing_config_[4] = -0.34;
     sensing_config_[5] = -1.8;
     sensing_config_[6] = -1.55;
+#endif
 #ifdef HQP_GRIPPER_JOINT
     sensing_config_[7] = 0.1;
 #endif
@@ -1128,12 +1147,111 @@ bool GraspingExperiments::setObjectPlace(PlaceInterval const& place)
 //-----------------------------------------------------------------
 bool GraspingExperiments::setObjectExtract()
 {
-#if 0
     hqp_controllers_msgs::Task task;
     hqp_controllers_msgs::TaskLink t_link;
     hqp_controllers_msgs::TaskGeometry t_geom;
 
 
+    //UPPER GRASP INTERVAL PLANE
+    task.t_links.clear();
+    task.dynamics.d_data.clear();
+
+    task.t_type = hqp_controllers_msgs::Task::PROJECTION;
+    task.priority = 2;
+    task.is_equality_task = false;
+    task.task_frame = grasp_.obj_frame_;
+    task.ds = 0.0;
+    task.di = 0.05;
+    task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
+    task.dynamics.d_data.push_back(DYNAMICS_GAIN);
+
+    t_link.geometries.clear();
+    t_geom.g_data.clear();
+    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::PLANE;
+    t_geom.g_data.push_back(grasp_.n2_(0)); t_geom.g_data.push_back(grasp_.n2_(1)); t_geom.g_data.push_back(grasp_.n2_(2));
+    t_geom.g_data.push_back(grasp_.d2_+EXTRACT_OFFSET);
+    t_link.link_frame = grasp_.obj_frame_;
+    t_link.geometries.push_back(t_geom);
+    task.t_links.push_back(t_link);
+
+    t_link.geometries.clear();
+    t_geom.g_data.clear();
+    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::POINT;
+    t_geom.g_data.push_back(grasp_.e_(0)); t_geom.g_data.push_back(grasp_.e_(1)); t_geom.g_data.push_back(grasp_.e_(2));
+    t_link.link_frame = grasp_.e_frame_;
+    t_link.geometries.push_back(t_geom);
+    task.t_links.push_back(t_link);
+
+    tasks_.request.tasks.push_back(task);
+    
+    //COPLANAR LINES CONSTRAINT
+    task.t_links.clear();
+    task.dynamics.d_data.clear();
+
+    task.t_type = hqp_controllers_msgs::Task::COPLANAR;
+    task.priority = 2;
+    task.is_equality_task = false;
+    task.task_frame = grasp_.obj_frame_;
+    task.ds = 0.0;
+    task.di = 0.05;
+    task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
+    task.dynamics.d_data.push_back(2 * DYNAMICS_GAIN);
+
+    t_link.geometries.clear();
+    t_geom.g_data.clear();
+    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::LINE;
+    t_geom.g_data.push_back(grasp_.p_(0)); t_geom.g_data.push_back(grasp_.p_(1)); t_geom.g_data.push_back(grasp_.p_(2));
+    t_geom.g_data.push_back(grasp_.v_(0)); t_geom.g_data.push_back(grasp_.v_(1)); t_geom.g_data.push_back(grasp_.v_(2));
+    t_link.link_frame = grasp_.obj_frame_;
+    t_link.geometries.push_back(t_geom);
+    task.t_links.push_back(t_link);
+
+    t_link.geometries.clear();
+    t_geom.g_data.clear();
+    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::CONE;
+    t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
+    t_geom.g_data.push_back(1); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
+    t_geom.g_data.push_back(ALIGNMENT_ANGLE);
+    t_link.link_frame = grasp_.e_frame_;
+    t_link.geometries.push_back(t_geom);
+    task.t_links.push_back(t_link);
+
+    tasks_.request.tasks.push_back(task);
+
+    //CONE CONSTRAINT
+    task.t_links.clear();
+    task.dynamics.d_data.clear();
+
+    task.t_type = hqp_controllers_msgs::Task::PARALLEL;
+    task.priority = 2;
+    task.is_equality_task = false;
+    task.task_frame = grasp_.obj_frame_;
+    task.ds = 0.0;
+    task.di = 0.05;
+    task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
+    task.dynamics.d_data.push_back(4 * DYNAMICS_GAIN);
+
+    t_link.geometries.clear();
+    t_geom.g_data.clear();
+    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::CONE;
+    t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
+    t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
+    t_geom.g_data.push_back(ALIGNMENT_ANGLE);
+    t_link.link_frame = grasp_.obj_frame_;
+    t_link.geometries.push_back(t_geom);
+    task.t_links.push_back(t_link);
+
+    t_link.geometries.clear();
+    t_geom.g_data.clear();
+    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::LINE;
+    t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
+    t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
+    t_link.link_frame = grasp_.e_frame_;
+    t_link.geometries.push_back(t_geom);
+    task.t_links.push_back(t_link);
+
+    tasks_.request.tasks.push_back(task);
+#if 0
     //EE ON ATTACK POINT
     task.t_links.clear();
     task.dynamics.d_data.clear();
@@ -1239,6 +1357,7 @@ bool GraspingExperiments::setObjectExtract()
     task.t_links.push_back(t_link);
 
     tasks_.request.tasks.push_back(task);
+#endif
 
     //send the filled task message to the controller
     if(!sendStateTasks())
@@ -1255,7 +1374,6 @@ bool GraspingExperiments::setObjectExtract()
 
     if(!visualizeStateTasks(ids))
         return false;
-#endif
     return true;
 }
 //-----------------------------------------------------------------
@@ -1607,7 +1725,6 @@ bool GraspingExperiments::setGraspApproach()
 
     tasks_.request.tasks.push_back(task);
    
-#if 0 
     //LEFT GRASP INTERVAL PLANE
     task.t_links.clear();
     task.dynamics.d_data.clear();
@@ -1805,6 +1922,7 @@ bool GraspingExperiments::setGraspApproach()
 
     tasks_.request.tasks.push_back(task);
 
+#if 0 
 #endif
 #endif
     for(int xx=0; xx<tasks_.request.tasks.size(); xx++) {

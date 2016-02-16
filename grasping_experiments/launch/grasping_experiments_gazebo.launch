@@ -45,13 +45,13 @@
      <param name="grasp_req_frame" value="world"/>
      <param name="grasp_req_radius" value="0.05"/>
      <param name="grasp_req_height" value="0.15"/>
-     <param name="grasp_req_px" value="-0.5"/>
-     <param name="grasp_req_py" value="-0.2"/>
-     <param name="grasp_req_pz" value="0.84"/>
-     <param name="grasp_req_ox" value="0.707"/>
+     <param name="grasp_req_px" value="-0.04"/>
+     <param name="grasp_req_py" value="0.68"/>
+     <param name="grasp_req_pz" value="0.07"/>
+     <param name="grasp_req_ox" value="0"/>
      <param name="grasp_req_oy" value="0"/>
      <param name="grasp_req_oz" value="0"/>
-     <param name="grasp_req_ow" value="-0.707"/>
+     <param name="grasp_req_ow" value="1"/>
      
      <remap from="/get_grasp_interval" to="/gplanner/plan_grasp"/>
      <remap from="/task_status_array" to="/lwr/lwr_velvet_hqp_vel_controller/task_status_array"/>
