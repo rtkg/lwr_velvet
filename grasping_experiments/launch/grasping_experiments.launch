@@ -2,8 +2,8 @@
 <launch>
   <!-- LAUNCH INTERFACE -->
   <include file="$(find can_finder)/launch/can_finder.launch"/>
-  <!--include file="$(find velvet_interface_node)/launch/velvet_node.launch"/-->
-  <include file="$(find experiment_console)/launch/asus_frames.launch"/>
+  <!--include file="$(find velvet_interface_node)/launch/velvet_node.launch"/>
+  <include file="$(find experiment_console)/launch/asus_frames.launch"/-->
 
   <!-- set the parameters for the real interface -->
   <arg name="lwr_powered" default="true"/>
