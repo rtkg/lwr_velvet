@@ -62,20 +62,22 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     reset_hqp_control_clt_ = n_.serviceClient<std_srvs::Empty>("reset_hqp_control");
     
     task_feedback_pub_ = n_.advertise<hqp_controllers_msgs::Task> ("task_feedback",10);
-
+    
     //hardcode graciously the frame, pose and bbox of object
     nh_.param<std::string>("grasp_req_frame", grasp_plan_request.request.header.frame_id , "world");
-    nh_.param<float>("grasp_req_radius", grasp_plan_request.request.object_radius , 0);
-    nh_.param<float>("grasp_req_height", grasp_plan_request.request.object_height , 0);
-    float px,py,pz, ox,oy,oz,ow;
-    nh_.param<float>("grasp_req_px",px, 0);
-    nh_.param<float>("grasp_req_py",py, 0);
-    nh_.param<float>("grasp_req_pz",pz, 0);
-    nh_.param<float>("grasp_req_ox",ox, 0);
-    nh_.param<float>("grasp_req_oy",oy, 0);
-    nh_.param<float>("grasp_req_oz",oz, 0);
-    nh_.param<float>("grasp_req_ow",ow, 0);
+    double px,py,pz, ox,oy,oz,ow, object_radius, object_height;
+    nh_.param<double>("grasp_req_radius", object_radius , 0);
+    nh_.param<double>("grasp_req_height", object_height , 0);
+    nh_.param<double>("grasp_req_px",px, 0);
+    nh_.param<double>("grasp_req_py",py, 0);
+    nh_.param<double>("grasp_req_pz",pz, 0);
+    nh_.param<double>("grasp_req_ox",ox, 0);
+    nh_.param<double>("grasp_req_oy",oy, 0);
+    nh_.param<double>("grasp_req_oz",oz, 0);
+    nh_.param<double>("grasp_req_ow",ow, 0);
 
+    grasp_plan_request.request.object_radius = object_radius;
+    grasp_plan_request.request.object_height = object_height;
     grasp_plan_request.request.objectPose.position.x = px;
     grasp_plan_request.request.objectPose.position.y = py;
     grasp_plan_request.request.objectPose.position.z = pz;
