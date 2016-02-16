@@ -34,6 +34,7 @@ namespace grasping_experiments
 #define BEER_RADIUS   0.55
 #define BEER_HEIGHT   -0.03
 #define EXTRACT_OFFSET 0.1
+#define MIN_OPENING 0.1
   //-----------------------------------------------------------
   ///**To simplify, a grasp intervall is given as two concentric cylinders, described by axis v and a point p on the axis (referenced in a static obj_frame), and two planes. The controller will try to bring endeffector point e, expressed in frame e_frame, inside the intervall described by the two cylinders and the planes (i.e., inside the shell formed by the cylinders and in between the planes described by n^Tx - d = 0)*/
   struct GraspInterval
@@ -41,6 +42,7 @@ namespace grasping_experiments
     std::string obj_frame_; //object frame
     std::string e_frame_; //endeffector frame
     Eigen::Vector3d e_; //endeffector point expressed in e_frame_
+    float angle;
 #ifdef PILE_GRASPING
     Eigen::Vector3d p_; //pile attack point
     Eigen::Vector3d a_; //approach axis

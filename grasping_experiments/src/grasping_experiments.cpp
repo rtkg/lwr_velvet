@@ -358,6 +358,15 @@ bool GraspingExperiments::getGraspInterval()
     ROS_ASSERT(data.size() == 7);
     grasp_.r2_ = data[6];
 
+    //set the angle to the max opening allowed
+    grasp_.angle = grasp_plan_request.response.max_oa;
+    //if we are too open, add a little safety margin
+    if(grasp_.angle < MIN_OPENING) grasp_.angle = MIN_OPENING;
+    //make sure we are never closed more than the allowed angle
+    if(grasp_.angle > grasp_plan_request.response.min_oa) grasp_.angle = grasp_plan_request.response.min_oa;
+    
+    ROS_INFO("GRIPPER WILL GO TO %f",grasp_.angle);
+
     //Plane normals need to point in opposit directions to give a closed interval
     ROS_ASSERT((grasp_.n1_.transpose() * grasp_.n2_)  <= 0.0);
 

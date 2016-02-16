@@ -151,10 +151,9 @@ namespace grasping_experiments
     
 	if(!with_gazebo_)
 	{
-	    //TODO: get gripper angle from grasp planner!
-	    //VELVET INITIAL POSE
+	    //VELVET pre-grasp configuration 
 	    velvet_interface_node::VelvetToPos poscall;
-	    poscall.request.angle = 0.3;
+	    poscall.request.angle = grasp_.angle;
 
 	    if(!velvet_pos_clt_.call(poscall))
 	    {
