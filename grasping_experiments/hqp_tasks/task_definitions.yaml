@@ -135,10 +135,10 @@ task_definitions:
          is_equality_task: 0
          task_frame: world
          ds: 0.0 #safety margin
-         di: 0.025  #influence zone
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-0.01]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
@@ -155,10 +155,10 @@ task_definitions:
          is_equality_task: 0
          task_frame: world
          ds: 0.0 #safety margin
-         di: 0.025  #influence zone
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-0.01]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
@@ -175,10 +175,10 @@ task_definitions:
          is_equality_task: 0
          task_frame: world
          ds: 0.0 #safety margin
-         di: 0.025  #influence zone
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-0.01]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
@@ -195,10 +195,10 @@ task_definitions:
          is_equality_task: 0
          task_frame: world
          ds: 0.0 #safety margin
-         di: 0.025  #influence zone
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-0.01]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
@@ -215,10 +215,10 @@ task_definitions:
          is_equality_task: 0
          task_frame: world
          ds: 0.0 #safety margin
-         di: 0.025  #influence zone
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-0.01]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
@@ -234,11 +234,11 @@ task_definitions:
          name: velvet_fingers_points_avoidance
          is_equality_task: 0
          task_frame: world
-         ds: 0.01 #safety margin
-         di: 0.03  #influence zone
+         ds: 0.0 #safety margin
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-2.0]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
