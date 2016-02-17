@@ -64,6 +64,7 @@
      <remap from="/set_physics_properties" to="/gazebo/set_physics_properties"/>
      <remap from="/joint_states" to="/lwr/joint_states"/>
      <remap from="/switch_controller" to="/lwr/controller_manager/switch_controller"/>
+     <remap from="/reset_map" to="/gplanner/clear_map"/>
 
   </node>
 

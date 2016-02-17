@@ -94,11 +94,13 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     {
         velvet_pos_clt_ = n_.serviceClient<velvet_interface_node::VelvetToPos>("velvet_pos");
         velvet_grasp_clt_ = n_.serviceClient<velvet_interface_node::SmartGrasp>("velvet_grasp");
+	reset_map_clt_ = n_.serviceClient<std_srvs::Empty>("reset_map");
         //set_stiffness_clt_ = n_.serviceClient<lbr_fri::SetStiffness>("set_stiffness");
         //next_truck_task_clt_ = n_.serviceClient<std_srvs::Empty>("execute_truck_task");
 	
         velvet_pos_clt_.waitForExistence();
         velvet_grasp_clt_.waitForExistence();
+        reset_map_clt_.waitForExistence();
         //set_stiffness_clt_.waitForExistence();
         //next_truck_task_clt_.waitForExistence();
     }
@@ -208,6 +210,7 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     grasp_.e_frame_ = "velvet_fingers_palm"; //endeffector frame
     grasp_.e_.setZero(); //endeffector point expressed in the endeffector frame
     grasp_.isSphereGrasp = false;
+    grasp_.isDefaultGrasp = true;
 
 #ifdef PILE_GRASPING
     grasp_.a_(0) = 0.0; grasp_.a_(1) = -1.0; grasp_.a_(2) = 0.0;
@@ -290,6 +293,15 @@ void GraspingExperiments::safeShutdown()
     ROS_BREAK(); //I must break you ... ros::shutdown() doesn't seem to do the job
 }
 //-----------------------------------------------------------------
+void GraspingExperiments::safeReset()
+{
+    deactivateHQPControl();
+    resetState();
+    std_srvs::Empty srv;
+    reset_hqp_control_clt_.call(srv);
+    pers_task_vis_ids_.clear();
+}
+//-----------------------------------------------------------------
 bool GraspingExperiments::getGraspInterval()
 {
     //get the grasp intervall
@@ -300,6 +312,7 @@ bool GraspingExperiments::getGraspInterval()
     if(!grasp_plan_request.response.success)
         return false;
 
+    grasp_.isDefaultGrasp = false;
 #ifdef PILE_GRASPING
     ROS_ASSERT(grasp.response.constraints.size()==2);
     std::vector<double> data;
@@ -382,7 +395,9 @@ bool GraspingExperiments::getGraspInterval()
     //if we are too open, add a little safety margin
     if(grasp_.angle < MIN_OPENING) grasp_.angle = MIN_OPENING;
     //make sure we are never closed more than the allowed angle
-    if(grasp_.angle > grasp_plan_request.response.min_oa) grasp_.angle = grasp_plan_request.response.min_oa;
+    if(grasp_.angle > grasp_plan_request.response.min_oa-OPENING_SAFETY_MARGIN) grasp_.angle = grasp_plan_request.response.min_oa-OPENING_SAFETY_MARGIN;
+    //if we are too open, add a little safety margin
+    if(grasp_.angle < MIN_OPENING) grasp_.angle = MIN_OPENING;
    
     ROS_INFO("GRIPPER WILL GO TO %f",grasp_.angle);
 
@@ -1537,6 +1552,9 @@ bool GraspingExperiments::setGripperExtract(PlaceInterval const& place)
 //-----------------------------------------------------------------
 bool GraspingExperiments::setGraspApproach()
 {
+    if(grasp_.isDefaultGrasp)
+	return false; 
+
     hqp_controllers_msgs::Task task;
     hqp_controllers_msgs::TaskLink t_link;
     hqp_controllers_msgs::TaskGeometry t_geom;

@@ -35,6 +35,7 @@ namespace grasping_experiments
 #define BEER_HEIGHT   -0.03
 #define EXTRACT_OFFSET 0.1
 #define MIN_OPENING 0.1
+#define OPENING_SAFETY_MARGIN 0.1
   //-----------------------------------------------------------
   ///**To simplify, a grasp intervall is given as two concentric cylinders, described by axis v and a point p on the axis (referenced in a static obj_frame), and two planes. The controller will try to bring endeffector point e, expressed in frame e_frame, inside the intervall described by the two cylinders and the planes (i.e., inside the shell formed by the cylinders and in between the planes described by n^Tx - d = 0)*/
   struct GraspInterval
@@ -43,7 +44,7 @@ namespace grasping_experiments
     std::string e_frame_; //endeffector frame
     Eigen::Vector3d e_; //endeffector point expressed in e_frame_
     float angle;
-    bool isSphereGrasp;
+    bool isSphereGrasp, isDefaultGrasp;
 #ifdef PILE_GRASPING
     Eigen::Vector3d p_; //pile attack point
     Eigen::Vector3d a_; //approach axis
@@ -140,6 +141,7 @@ namespace grasping_experiments
     ros::ServiceClient velvet_grasp_clt_;
     ros::ServiceClient set_stiffness_clt_;
     ros::ServiceClient next_truck_task_clt_;
+    ros::ServiceClient reset_map_clt_;
     ros::ServiceServer start_demo_srv_;
     ros::ServiceServer exp_outcome_srv_;
     ros::ServiceServer gimme_beer_srv_;
@@ -177,6 +179,8 @@ namespace grasping_experiments
     void activateHQPControl();
     //**First deactivates the HQP control scheme (the controller will output zero velocity commands afterwards) and then calls a ros::shutdown */
     void safeShutdown();
+    //**like shutdown but we can run again */
+    void safeReset();
 
     bool setJointConfiguration(std::vector<double> const& joints);
     bool setGraspApproach();
