@@ -207,6 +207,7 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     grasp_.obj_frame_ = "world"; //object frame
     grasp_.e_frame_ = "velvet_fingers_palm"; //endeffector frame
     grasp_.e_.setZero(); //endeffector point expressed in the endeffector frame
+    grasp_.isSphereGrasp = false;
 
 #ifdef PILE_GRASPING
     grasp_.a_(0) = 0.0; grasp_.a_(1) = -1.0; grasp_.a_(2) = 0.0;
@@ -345,18 +346,36 @@ bool GraspingExperiments::getGraspInterval()
     grasp_.d4_ = data[3];
 
     //INNER GRASP CYLINDER
-    ROS_ASSERT(grasp_plan_request.response.constraints[4].g_type == hqp_controllers_msgs::TaskGeometry::CYLINDER);
-    data = grasp_plan_request.response.constraints[4].g_data;
-    ROS_ASSERT(data.size() == 7);
-    grasp_.p_(0) = data[0];  grasp_.p_(1) = data[1]; grasp_.p_(2) = data[2];
-    grasp_.v_(0) = data[3];  grasp_.v_(1) = data[4]; grasp_.v_(2) = data[5];
-    grasp_.r1_ = data[6];
+    ROS_ASSERT(grasp_plan_request.response.constraints[4].g_type == hqp_controllers_msgs::TaskGeometry::CYLINDER || 
+	    grasp_plan_request.response.constraints[4].g_type == hqp_controllers_msgs::TaskGeometry::SPHERE );
+    
+    grasp_.isSphereGrasp =  grasp_plan_request.response.constraints[4].g_type == hqp_controllers_msgs::TaskGeometry::SPHERE;
 
-    //OUTER GRASP CYLINDER
-    ROS_ASSERT(grasp_plan_request.response.constraints[5].g_type == hqp_controllers_msgs::TaskGeometry::CYLINDER);
-    data = grasp_plan_request.response.constraints[5].g_data;
-    ROS_ASSERT(data.size() == 7);
-    grasp_.r2_ = data[6];
+    data = grasp_plan_request.response.constraints[4].g_data;
+    if(!grasp_.isSphereGrasp) {
+	ROS_ASSERT(data.size() == 7);
+	grasp_.p_(0) = data[0];  grasp_.p_(1) = data[1]; grasp_.p_(2) = data[2];
+	grasp_.v_(0) = data[3];  grasp_.v_(1) = data[4]; grasp_.v_(2) = data[5];
+	grasp_.r1_ = data[6];
+
+	//OUTER GRASP CYLINDER
+	ROS_ASSERT(grasp_plan_request.response.constraints[5].g_type == hqp_controllers_msgs::TaskGeometry::CYLINDER);
+	data = grasp_plan_request.response.constraints[5].g_data;
+	ROS_ASSERT(data.size() == 7);
+	grasp_.r2_ = data[6];
+    } else {
+	
+	ROS_ASSERT(data.size() == 4);
+	grasp_.p_(0) = data[0];  grasp_.p_(1) = data[1]; grasp_.p_(2) = data[2];
+	grasp_.r1_ = data[3];
+
+	//OUTER GRASP CYLINDER
+	ROS_ASSERT(grasp_plan_request.response.constraints[5].g_type == hqp_controllers_msgs::TaskGeometry::SPHERE);
+	data = grasp_plan_request.response.constraints[5].g_data;
+	ROS_ASSERT(data.size() == 4);
+	grasp_.r2_ = data[3];
+
+    }
 
     //set the angle to the max opening allowed
     grasp_.angle = grasp_plan_request.response.max_oa;
@@ -364,7 +383,7 @@ bool GraspingExperiments::getGraspInterval()
     if(grasp_.angle < MIN_OPENING) grasp_.angle = MIN_OPENING;
     //make sure we are never closed more than the allowed angle
     if(grasp_.angle > grasp_plan_request.response.min_oa) grasp_.angle = grasp_plan_request.response.min_oa;
-    
+   
     ROS_INFO("GRIPPER WILL GO TO %f",grasp_.angle);
 
     //Plane normals need to point in opposit directions to give a closed interval
@@ -1799,140 +1818,210 @@ bool GraspingExperiments::setGraspApproach()
     task.t_links.push_back(t_link);
 
     tasks_.request.tasks.push_back(task);
-    //INNER CONSTRAINT CYLINDER
-    task.t_links.clear();
-    task.dynamics.d_data.clear();
 
-    task.t_type = hqp_controllers_msgs::Task::PROJECTION;
-    task.priority = 2;
-    task.is_equality_task = false;
-    task.task_frame = grasp_.obj_frame_;
-    task.ds = 0.0;
-    task.di = 0.05;
-    task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
-    task.dynamics.d_data.push_back(DYNAMICS_GAIN);
+    if(!grasp_.isSphereGrasp) {
+	//INNER CONSTRAINT CYLINDER
+	task.t_links.clear();
+	task.dynamics.d_data.clear();
 
-    t_link.geometries.clear();
-    t_geom.g_data.clear();
-    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::CYLINDER;
-    t_geom.g_data.push_back(grasp_.p_(0)); t_geom.g_data.push_back(grasp_.p_(1)); t_geom.g_data.push_back(grasp_.p_(2));
-    t_geom.g_data.push_back(grasp_.v_(0)); t_geom.g_data.push_back(grasp_.v_(1)); t_geom.g_data.push_back(grasp_.v_(2));
-    t_geom.g_data.push_back(grasp_.r1_);
-    t_link.link_frame = grasp_.obj_frame_;
-    t_link.geometries.push_back(t_geom);
-    task.t_links.push_back(t_link);
+	task.t_type = hqp_controllers_msgs::Task::PROJECTION;
+	task.priority = 2;
+	task.is_equality_task = false;
+	task.task_frame = grasp_.obj_frame_;
+	task.ds = 0.0;
+	task.di = 0.05;
+	task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
+	task.dynamics.d_data.push_back(DYNAMICS_GAIN);
 
-    t_link.geometries.clear();
-    t_geom.g_data.clear();
-    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::POINT;
-    t_geom.g_data.push_back(grasp_.e_(0)); t_geom.g_data.push_back(grasp_.e_(1)); t_geom.g_data.push_back(grasp_.e_(2));
-    t_link.link_frame = grasp_.e_frame_;
-    t_link.geometries.push_back(t_geom);
-    task.t_links.push_back(t_link);
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::CYLINDER;
+	t_geom.g_data.push_back(grasp_.p_(0)); t_geom.g_data.push_back(grasp_.p_(1)); t_geom.g_data.push_back(grasp_.p_(2));
+	t_geom.g_data.push_back(grasp_.v_(0)); t_geom.g_data.push_back(grasp_.v_(1)); t_geom.g_data.push_back(grasp_.v_(2));
+	t_geom.g_data.push_back(grasp_.r1_);
+	t_link.link_frame = grasp_.obj_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
 
-    tasks_.request.tasks.push_back(task);
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::POINT;
+	t_geom.g_data.push_back(grasp_.e_(0)); t_geom.g_data.push_back(grasp_.e_(1)); t_geom.g_data.push_back(grasp_.e_(2));
+	t_link.link_frame = grasp_.e_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
 
-    //OUTER CONSTRAINT CYLINDER
-    task.t_links.clear();
-    task.dynamics.d_data.clear();
+	tasks_.request.tasks.push_back(task);
 
-    task.t_type = hqp_controllers_msgs::Task::PROJECTION;
-    task.priority = 2;
-    task.is_equality_task = false;
-    task.task_frame = grasp_.obj_frame_;
-    task.ds = 0.0;
-    task.di = 0.05;
-    task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
-    task.dynamics.d_data.push_back(DYNAMICS_GAIN);
+	//OUTER CONSTRAINT CYLINDER
+	task.t_links.clear();
+	task.dynamics.d_data.clear();
 
-    t_link.geometries.clear();
-    t_geom.g_data.clear();
-    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::POINT;
-    t_geom.g_data.push_back(grasp_.e_(0)); t_geom.g_data.push_back(grasp_.e_(1)); t_geom.g_data.push_back(grasp_.e_(2));
-    t_link.link_frame = grasp_.e_frame_;
-    t_link.geometries.push_back(t_geom);
-    task.t_links.push_back(t_link);
+	task.t_type = hqp_controllers_msgs::Task::PROJECTION;
+	task.priority = 2;
+	task.is_equality_task = false;
+	task.task_frame = grasp_.obj_frame_;
+	task.ds = 0.0;
+	task.di = 0.05;
+	task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
+	task.dynamics.d_data.push_back(DYNAMICS_GAIN);
 
-    t_link.geometries.clear();
-    t_geom.g_data.clear();
-    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::CYLINDER;
-    t_geom.g_data.push_back(grasp_.p_(0)); t_geom.g_data.push_back(grasp_.p_(1)); t_geom.g_data.push_back(grasp_.p_(2));
-    t_geom.g_data.push_back(grasp_.v_(0)); t_geom.g_data.push_back(grasp_.v_(1)); t_geom.g_data.push_back(grasp_.v_(2));
-    t_geom.g_data.push_back(grasp_.r2_);
-    t_link.link_frame = grasp_.obj_frame_;
-    t_link.geometries.push_back(t_geom);
-    task.t_links.push_back(t_link);
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::POINT;
+	t_geom.g_data.push_back(grasp_.e_(0)); t_geom.g_data.push_back(grasp_.e_(1)); t_geom.g_data.push_back(grasp_.e_(2));
+	t_link.link_frame = grasp_.e_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
 
-    tasks_.request.tasks.push_back(task);
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::CYLINDER;
+	t_geom.g_data.push_back(grasp_.p_(0)); t_geom.g_data.push_back(grasp_.p_(1)); t_geom.g_data.push_back(grasp_.p_(2));
+	t_geom.g_data.push_back(grasp_.v_(0)); t_geom.g_data.push_back(grasp_.v_(1)); t_geom.g_data.push_back(grasp_.v_(2));
+	t_geom.g_data.push_back(grasp_.r2_);
+	t_link.link_frame = grasp_.obj_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
 
-    //COPLANAR LINES CONSTRAINT
-    task.t_links.clear();
-    task.dynamics.d_data.clear();
+	tasks_.request.tasks.push_back(task);
 
-    task.t_type = hqp_controllers_msgs::Task::COPLANAR;
-    task.priority = 2;
-    task.is_equality_task = false;
-    task.task_frame = grasp_.obj_frame_;
-    task.ds = 0.0;
-    task.di = 0.05;
-    task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
-    task.dynamics.d_data.push_back(2 * DYNAMICS_GAIN);
+	//COPLANAR LINES CONSTRAINT
+	task.t_links.clear();
+	task.dynamics.d_data.clear();
 
-    t_link.geometries.clear();
-    t_geom.g_data.clear();
-    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::LINE;
-    t_geom.g_data.push_back(grasp_.p_(0)); t_geom.g_data.push_back(grasp_.p_(1)); t_geom.g_data.push_back(grasp_.p_(2));
-    t_geom.g_data.push_back(grasp_.v_(0)); t_geom.g_data.push_back(grasp_.v_(1)); t_geom.g_data.push_back(grasp_.v_(2));
-    t_link.link_frame = grasp_.obj_frame_;
-    t_link.geometries.push_back(t_geom);
-    task.t_links.push_back(t_link);
+	task.t_type = hqp_controllers_msgs::Task::COPLANAR;
+	task.priority = 2;
+	task.is_equality_task = false;
+	task.task_frame = grasp_.obj_frame_;
+	task.ds = 0.0;
+	task.di = 0.05;
+	task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
+	task.dynamics.d_data.push_back(2 * DYNAMICS_GAIN);
 
-    t_link.geometries.clear();
-    t_geom.g_data.clear();
-    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::CONE;
-    t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
-    t_geom.g_data.push_back(1); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
-    t_geom.g_data.push_back(ALIGNMENT_ANGLE);
-    t_link.link_frame = grasp_.e_frame_;
-    t_link.geometries.push_back(t_geom);
-    task.t_links.push_back(t_link);
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::LINE;
+	t_geom.g_data.push_back(grasp_.p_(0)); t_geom.g_data.push_back(grasp_.p_(1)); t_geom.g_data.push_back(grasp_.p_(2));
+	t_geom.g_data.push_back(grasp_.v_(0)); t_geom.g_data.push_back(grasp_.v_(1)); t_geom.g_data.push_back(grasp_.v_(2));
+	t_link.link_frame = grasp_.obj_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
 
-    tasks_.request.tasks.push_back(task);
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::CONE;
+	t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
+	t_geom.g_data.push_back(1); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
+	t_geom.g_data.push_back(ALIGNMENT_ANGLE);
+	t_link.link_frame = grasp_.e_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
 
-    //CONE CONSTRAINT
-    task.t_links.clear();
-    task.dynamics.d_data.clear();
+	tasks_.request.tasks.push_back(task);
 
-    task.t_type = hqp_controllers_msgs::Task::PARALLEL;
-    task.priority = 2;
-    task.is_equality_task = false;
-    task.task_frame = grasp_.obj_frame_;
-    task.ds = 0.0;
-    task.di = 0.05;
-    task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
-    task.dynamics.d_data.push_back(4 * DYNAMICS_GAIN);
+	//CONE CONSTRAINT
+	task.t_links.clear();
+	task.dynamics.d_data.clear();
 
-    t_link.geometries.clear();
-    t_geom.g_data.clear();
-    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::CONE;
-    t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
-    t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
-    t_geom.g_data.push_back(ALIGNMENT_ANGLE);
-    t_link.link_frame = grasp_.obj_frame_;
-    t_link.geometries.push_back(t_geom);
-    task.t_links.push_back(t_link);
+	task.t_type = hqp_controllers_msgs::Task::PARALLEL;
+	task.priority = 2;
+	task.is_equality_task = false;
+	task.task_frame = grasp_.obj_frame_;
+	task.ds = 0.0;
+	task.di = 0.05;
+	task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
+	task.dynamics.d_data.push_back(4 * DYNAMICS_GAIN);
 
-    t_link.geometries.clear();
-    t_geom.g_data.clear();
-    t_geom.g_type = hqp_controllers_msgs::TaskGeometry::LINE;
-    t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
-    t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
-    t_link.link_frame = grasp_.e_frame_;
-    t_link.geometries.push_back(t_geom);
-    task.t_links.push_back(t_link);
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::CONE;
+	t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
+	t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
+	t_geom.g_data.push_back(ALIGNMENT_ANGLE);
+	t_link.link_frame = grasp_.obj_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
 
-    tasks_.request.tasks.push_back(task);
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::LINE;
+	t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(0);
+	t_geom.g_data.push_back(0); t_geom.g_data.push_back(0); t_geom.g_data.push_back(1);
+	t_link.link_frame = grasp_.e_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
 
+	tasks_.request.tasks.push_back(task);
+    }
+    else 
+    {
+	//INNER SPHERE CYLINDER
+	task.t_links.clear();
+	task.dynamics.d_data.clear();
+
+	task.t_type = hqp_controllers_msgs::Task::PROJECTION;
+	task.priority = 2;
+	task.is_equality_task = false;
+	task.task_frame = grasp_.obj_frame_;
+	task.ds = 0.0;
+	task.di = 0.05;
+	task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
+	task.dynamics.d_data.push_back(DYNAMICS_GAIN);
+
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
+	t_geom.g_data.push_back(grasp_.p_(0)); t_geom.g_data.push_back(grasp_.p_(1)); t_geom.g_data.push_back(grasp_.p_(2));
+	t_geom.g_data.push_back(grasp_.r1_);
+	t_link.link_frame = grasp_.obj_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
+
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::POINT;
+	t_geom.g_data.push_back(grasp_.e_(0)); t_geom.g_data.push_back(grasp_.e_(1)); t_geom.g_data.push_back(grasp_.e_(2));
+	t_link.link_frame = grasp_.e_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
+
+	tasks_.request.tasks.push_back(task);
+
+	//OUTER CONSTRAINT CYLINDER
+	task.t_links.clear();
+	task.dynamics.d_data.clear();
+
+	task.t_type = hqp_controllers_msgs::Task::PROJECTION;
+	task.priority = 2;
+	task.is_equality_task = false;
+	task.task_frame = grasp_.obj_frame_;
+	task.ds = 0.0;
+	task.di = 0.05;
+	task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
+	task.dynamics.d_data.push_back(DYNAMICS_GAIN);
+
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::POINT;
+	t_geom.g_data.push_back(grasp_.e_(0)); t_geom.g_data.push_back(grasp_.e_(1)); t_geom.g_data.push_back(grasp_.e_(2));
+	t_link.link_frame = grasp_.e_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
+
+	t_link.geometries.clear();
+	t_geom.g_data.clear();
+	t_geom.g_type = hqp_controllers_msgs::TaskGeometry::SPHERE;
+	t_geom.g_data.push_back(grasp_.p_(0)); t_geom.g_data.push_back(grasp_.p_(1)); t_geom.g_data.push_back(grasp_.p_(2));
+	t_geom.g_data.push_back(grasp_.r2_);
+	t_link.link_frame = grasp_.obj_frame_;
+	t_link.geometries.push_back(t_geom);
+	task.t_links.push_back(t_link);
+
+	tasks_.request.tasks.push_back(task);
+
+	//TODO: add gripper alignment constraints
+    }
 #if 0 
 #endif
 #endif

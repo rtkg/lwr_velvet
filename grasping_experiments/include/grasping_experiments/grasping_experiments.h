@@ -43,6 +43,7 @@ namespace grasping_experiments
     std::string e_frame_; //endeffector frame
     Eigen::Vector3d e_; //endeffector point expressed in e_frame_
     float angle;
+    bool isSphereGrasp;
 #ifdef PILE_GRASPING
     Eigen::Vector3d p_; //pile attack point
     Eigen::Vector3d a_; //approach axis
