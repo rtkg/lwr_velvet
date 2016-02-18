@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
   <!-- LAUNCH INTERFACE -->
-  <include file="$(find can_finder)/launch/can_finder.launch"/>
+  <!--include file="$(find can_finder)/launch/can_finder.launch"/-->
   <!--include file="$(find velvet_interface_node)/launch/velvet_node.launch"/-->
-  <include file="$(find experiment_console)/launch/asus_frames.launch"/>
+  <!--include file="$(find experiment_console)/launch/asus_frames.launch"/-->
   <!--include file="$(find grasp_planner)/launch/grasp_planner_online.launch"/-->
 
   <!-- set the parameters for the real interface -->
@@ -70,8 +70,8 @@
      <param name="grasp_req_frame" value="world"/>
      <param name="grasp_req_radius" value="0.065"/>
      <param name="grasp_req_height" value="0.20"/>
-     <param name="grasp_req_px" value="-0.045"/>
-     <param name="grasp_req_py" value="0.70"/>
+     <param name="grasp_req_px" value="-0.14"/>
+     <param name="grasp_req_py" value="0.71"/>
      <param name="grasp_req_pz" value="0.10"/>
      <param name="grasp_req_ox" value="0"/>
      <param name="grasp_req_oy" value="0"/>
@@ -100,6 +100,5 @@
  <!--load predifined persistent task descriptions (joint limit avoidance, self-collision avoidance ...) definitions for the HQP controller -->
  <rosparam file="$(find grasping_experiments)/hqp_tasks/task_definitions.yaml" command="load" ns="/lwr"/>
 
-      <node name="lwr_rqt" pkg="rqt_gui" type="rqt_gui" respawn="false" output="screen" />
 
 </launch>

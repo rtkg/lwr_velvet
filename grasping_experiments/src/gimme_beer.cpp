@@ -14,6 +14,7 @@ namespace grasping_experiments
     bag_.open(bag_name_, rosbag::bagmode::Write);
     controller_manager_msgs::SwitchController switch_msg;
 
+#if 0
     if(!with_gazebo_)
       {
 	//SWITCH TO VELOCITY CONTROL
@@ -33,6 +34,7 @@ namespace grasping_experiments
 	  }
 	sleep(2);
       }
+#endif
 
     std_srvs::Empty srv;
     deactivateHQPControl();
@@ -58,6 +60,7 @@ namespace grasping_experiments
 	    ROS_ERROR("could not call velvet to pos");
 	    ROS_BREAK();
 	  }
+	write_img_ = true;
       }
     {//MANIPULATOR SENSING CONFIGURATION - Second
       ROS_INFO("Trying to put the manipulator in sensing configuration.");
@@ -101,6 +104,39 @@ namespace grasping_experiments
 	    ROS_BREAK();
 	  }
       }
+    {//MANIPULATOR SENSING CONFIGURATION - Third
+      ROS_INFO("Trying to put the manipulator in sensing configuration.");
+      boost::mutex::scoped_lock lock(manipulator_tasks_m_);
+      task_status_changed_ = false;
+      task_success_ = false;
+      deactivateHQPControl();
+      if(!resetState())
+	{
+	  ROS_ERROR("Could not reset the state!");
+	  safeShutdown();
+	  return false;
+	}
+
+      if(!setJointConfiguration(sensing_config3_))
+	{
+	  ROS_ERROR("Could not set manipulator sensing state!");
+	  safeShutdown();
+	  return false;
+	}
+      task_error_tol_ = 1e-2;
+      activateHQPControl();
+
+      while(!task_status_changed_)
+	cond_.wait(lock);
+
+      if(!task_success_)
+	{
+	  ROS_ERROR("Could not complete the manipulator sensing state tasks!");
+	  safeShutdown();
+	  return false;
+	}
+      ROS_INFO("SECOND Manipulator sensing state tasks executed successfully.");
+    }
 
     {//MANIPULATOR SENSING CONFIGURATION - First
       ROS_INFO("Trying to put the manipulator in sensing configuration.");
@@ -138,7 +174,8 @@ namespace grasping_experiments
 
 
     {//GRASP APPROACH
-      //write_jnts_=true;
+      write_jnts_=true;
+      write_tf_=true;
       ROS_INFO("Trying grasp approach.");
       boost::mutex::scoped_lock lock(manipulator_tasks_m_);
       task_status_changed_ = false;
@@ -153,7 +190,7 @@ namespace grasping_experiments
 
       //if(!with_gazebo_)
 	{
-	  //write_cluster_ = true;
+	  write_cluster_ = true;
 	  if(!getGraspInterval())
 	    ROS_WARN("Could not obtain the grasp intervall - using default interval!");
 
@@ -193,8 +230,7 @@ namespace grasping_experiments
 	}
 
       ROS_INFO("Grasp approach tasks executed successfully.");
-      //write_jnts_=false;
-      //write_tf_=true;
+      write_jnts_=false;
     }
     if(!with_gazebo_)
       {
@@ -219,6 +255,7 @@ namespace grasping_experiments
 
 
     {//OBJECT EXTRACT
+      write_tf_=true;
       ROS_INFO("Trying object extract.");
       boost::mutex::scoped_lock lock(manipulator_tasks_m_);
       task_status_changed_ = false;
@@ -255,6 +292,7 @@ namespace grasping_experiments
 	  return false;
 	}
       ROS_INFO("Object extract tasks executed successfully.");
+      write_tf_=false;
     }
     
     {//MANIPULATOR SENSING CONFIGURATION - First
@@ -291,49 +329,6 @@ namespace grasping_experiments
       ROS_INFO("Manipulator sensing state tasks executed successfully.");
     }
 
-#if 0
-    {//MANIPULATOR GIMME BEER CONFIGURATION
-      ROS_INFO("Trying to put the manipulator in gimme beer configuration.");
-
-      boost::mutex::scoped_lock lock(manipulator_tasks_m_);
-      task_status_changed_ = false;
-      task_success_ = false;
-      deactivateHQPControl();
-      if(!resetState())
-	{
-	  ROS_ERROR("Could not reset the state!");
-	  safeShutdown();
-	  return false;
-	}
-      // if(!setCartesianStiffness(1000, 1000, 1000, 100, 100, 100))
-      // 	{
-      // 	  safeShutdown();
-      // 	  return false;
-      // 	}
-
-      if(!setJointConfiguration(gimme_beer_config_))
-	{
-	  ROS_ERROR("Could not set manipulator gimme beer configuration!");
-	  safeShutdown();
-	  return false;
-	}
-      task_error_tol_ = 1e-2;
-      activateHQPControl();
-
-      while(!task_status_changed_)
-	cond_.wait(lock);
-
-      if(!task_success_)
-	{
-	  ROS_ERROR("Could not complete the manipulator gimme beer configuration tasks!");
-	  safeShutdown();
-	  return false;
-	}
-      ROS_INFO("Manipulator gimme beer configuration tasks executed successfully.");
-    }
-#endif
-
-#if 0
     if(!with_gazebo_)
       {
 	velvet_interface_node::VelvetToPos poscall2;
@@ -345,6 +340,7 @@ namespace grasping_experiments
 	    ROS_BREAK();
 	  }
       }
+#if 0
 #endif
 
     deactivateHQPControl();
@@ -521,7 +517,7 @@ namespace grasping_experiments
 
       if(!with_gazebo_)
 	{
-	  //write_cluster_ = true;
+	  write_cluster_ = true;
 	  if(!getGraspInterval())
 	    ROS_WARN("Could not obtain the grasp intervall - using default interval!");
 

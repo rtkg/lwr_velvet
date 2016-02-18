@@ -34,6 +34,7 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
 
 
     write_jnts_=false;
+    write_img_=false;
     write_tf_=false;
     write_cluster_=false;
 
@@ -51,7 +52,8 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     look_what_i_found_srv_ = nh_.advertiseService("look_what_i_found", &GraspingExperiments::lookWhatIFound, this);
     task_status_sub_ = n_.subscribe("task_status_array", 1, &GraspingExperiments::taskStatusCallback, this);
     joint_state_sub_ = n_.subscribe("joint_states", 1, &GraspingExperiments::jointStateCallback, this);
-    cluster_sub_ = n_.subscribe("result_cloud", 1, &GraspingExperiments::clusterCallback, this);
+    img_sub_ = n_.subscribe("/camera/rgb/image_raw", 1, &GraspingExperiments::imgCallback, this);
+    cluster_sub_ = n_.subscribe("/gplanner/fused_pc", 1, &GraspingExperiments::clusterCallback, this);
     tf_sub_ = n_.subscribe("tf", 1, &GraspingExperiments::tfCallback, this);
     set_tasks_clt_ = n_.serviceClient<hqp_controllers_msgs::SetTasks>("set_tasks");
     remove_tasks_clt_ = n_.serviceClient<hqp_controllers_msgs::RemoveTasks>("remove_tasks");
@@ -179,6 +181,16 @@ GraspingExperiments::GraspingExperiments() : task_error_tol_(0.0), task_diff_tol
     sensing_config2_[4] = -2.86;
     sensing_config2_[5] = 1.96;
     sensing_config2_[6] = 1.42;
+
+    sensing_config3_ = std::vector<double>(n_jnts);
+    sensing_config3_[0] = 0.458;
+    sensing_config3_[1] = -1.259;
+    sensing_config3_[2] = 0.833;
+    sensing_config3_[3] = 0.612;
+    sensing_config3_[4] = -2.88;
+    sensing_config3_[5] = 1.82;
+    sensing_config3_[6] = 1.22;
+
 #if 0
     sensing_config_ = std::vector<double>(n_jnts);
     sensing_config_[0] = 2.13;
@@ -1720,7 +1732,7 @@ bool GraspingExperiments::setGraspApproach()
     task.ds = 0.0;
     task.di = 0.02;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
-    task.dynamics.d_data.push_back(DYNAMICS_GAIN / 5);
+    task.dynamics.d_data.push_back(DYNAMICS_GAIN );
 
     t_link.geometries.clear();
     t_geom.g_data.clear();
@@ -1752,7 +1764,7 @@ bool GraspingExperiments::setGraspApproach()
     task.ds = 0.0;
     task.di = 0.05;
     task.dynamics.d_type = hqp_controllers_msgs::TaskDynamics::LINEAR_DYNAMICS;
-    task.dynamics.d_data.push_back(DYNAMICS_GAIN);
+    task.dynamics.d_data.push_back(2*DYNAMICS_GAIN);
 
     t_link.geometries.clear();
     t_geom.g_data.clear();
@@ -2193,6 +2205,17 @@ void GraspingExperiments::taskStatusCallback( const hqp_controllers_msgs::TaskSt
 
     if(write_jnts_)
 	bag_.write("joint_states", ros::Time::now(), *msg);
+                  
+  }
+//-----------------------------------------------------------------
+  void GraspingExperiments::imgCallback( const sensor_msgs::ImagePtr& msg)
+  {
+    boost::mutex::scoped_lock lock(force_change_m_, boost::try_to_lock);
+    if(!lock) return;
+
+    if(write_img_)
+	bag_.write("rgb_image_raw", ros::Time::now(), *msg);
+    write_img_ = false;
                   
   }
 //-----------------------------------------------------------------
