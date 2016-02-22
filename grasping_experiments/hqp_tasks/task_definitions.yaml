@@ -135,15 +135,15 @@ task_definitions:
          is_equality_task: 0
          task_frame: world
          ds: 0.0 #safety margin
-         di: 0.025  #influence zone
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-0.01]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.99] 
+                  g_data: [0.0, 0.0, 1.0, 0.07] 
             - link_frame: lwr_3_link
               geometries: 
                 - g_type: 10 #sphere
@@ -155,15 +155,15 @@ task_definitions:
          is_equality_task: 0
          task_frame: world
          ds: 0.0 #safety margin
-         di: 0.025  #influence zone
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-0.01]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.99] 
+                  g_data: [0.0, 0.0, 1.0, 0.07] 
             - link_frame: lwr_4_link
               geometries: 
                 - g_type: 10 #sphere
@@ -175,15 +175,15 @@ task_definitions:
          is_equality_task: 0
          task_frame: world
          ds: 0.0 #safety margin
-         di: 0.025  #influence zone
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-0.01]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.99] 
+                  g_data: [0.0, 0.0, 1.0, 0.07] 
             - link_frame: lwr_5_link
               geometries: 
                 - g_type: 10 #sphere
@@ -195,15 +195,15 @@ task_definitions:
          is_equality_task: 0
          task_frame: world
          ds: 0.0 #safety margin
-         di: 0.025  #influence zone
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-0.01]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.99] 
+                  g_data: [0.0, 0.0, 1.0, 0.07] 
             - link_frame: lwr_6_link
               geometries: 
                 - g_type: 10 #sphere
@@ -215,15 +215,15 @@ task_definitions:
          is_equality_task: 0
          task_frame: world
          ds: 0.0 #safety margin
-         di: 0.025  #influence zone
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-0.01]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.99] 
+                  g_data: [0.0, 0.0, 1.0, 0.07] 
             - link_frame: velvet_fingers_palm
               geometries: 
                 - g_type: 10 #sphere
@@ -234,16 +234,16 @@ task_definitions:
          name: velvet_fingers_points_avoidance
          is_equality_task: 0
          task_frame: world
-         ds: 0.01 #safety margin
-         di: 0.03  #influence zone
+         ds: 0.0 #safety margin
+         di: 0.01  #influence zone
          dynamics: 
            d_type: 1
-           d_data: [-2.0]
+           d_data: [-5.0]
          t_links:
             - link_frame: world
               geometries: 
                 - g_type: 3 #plane
-                  g_data: [0.0, 0.0, 1.0, 0.99] 
+                  g_data: [0.0, 0.0, 1.0, 0.07] 
             - link_frame: velvet_fingers_palm
               geometries: 
                 - g_type: 1 #point
